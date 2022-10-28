@@ -10,7 +10,8 @@ const Login = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [validation, setValidation] = useState([])
+    const [showAlert, setShowAlert] = useState([], true)
+    const [colorAlert, setColorAlert] = useState('bg-red-500')
 
     const loginHandler = async e => {
         e.preventDefault()
@@ -30,7 +31,10 @@ const Login = () => {
                 Router.push('/akun')
             })
             .catch(error => {
-                setValidation(error.response.data)
+                setShowAlert(error.response.data)
+                setTimeout(() => {
+                    setColorAlert('bg-red-500')
+                }, 1000)
             })
     }
     useEffect(() => {
@@ -119,11 +123,16 @@ const Login = () => {
             <Head>
                 <title>Gakuniq - Login</title>
             </Head>
-            {validation.message && (
+            {showAlert.message && (
                 <div className="toast toast-start">
-                    <div className="alert alert-info">
-                        <div>
-                            <span>{validation.message}</span>
+                    <div className={'alert alert-success ' + colorAlert}>
+                        <div className="flex flex-row">
+                            <span>{showAlert.message}</span>
+                            <button
+                                className="bg-transparent text-2xl font-semibold leading-none outline-none focus:outline-none"
+                                onClick={() => setShowAlert(false)}>
+                                <span>×</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -150,6 +159,7 @@ const Login = () => {
                                 className="w-20 h-20 fill-current text-white"
                             />
                             <input
+                                required
                                 type="text"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
@@ -157,6 +167,7 @@ const Login = () => {
                                 className="input input-bordered w-full max-w-xs bg-slate-100 bg-opacity-100 mt-2"
                             />
                             <input
+                                required
                                 type="password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
@@ -169,6 +180,7 @@ const Login = () => {
                                         htmlFor="remember_me"
                                         className="inline-flex items-start">
                                         <input
+                                            required
                                             id="remember_me"
                                             type="checkbox"
                                             name="remember"
@@ -211,7 +223,12 @@ const Login = () => {
                     </form>
                 </div>
             </div>
-            <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+            <input
+                required
+                type="checkbox"
+                id="my-modal-3"
+                className="modal-toggle"
+            />
             <div className="modal ">
                 <div className="modal-box w-[40%] max-w-5xl relative bg-slate-500">
                     <label
@@ -230,6 +247,7 @@ const Login = () => {
                                         Nama Depan
                                     </span>
                                     <input
+                                        required
                                         type="text"
                                         value={nama_depan}
                                         onChange={e =>
@@ -246,6 +264,7 @@ const Login = () => {
                                         Nama Belakang
                                     </span>
                                     <input
+                                        required
                                         type="text"
                                         value={nama_belakang}
                                         onChange={e =>
@@ -262,6 +281,7 @@ const Login = () => {
                                         Nomer Telepon
                                     </span>
                                     <input
+                                        required
                                         type="number"
                                         value={nomer_telepon}
                                         onChange={e =>
@@ -278,6 +298,7 @@ const Login = () => {
                                         Email
                                     </span>
                                     <input
+                                        required
                                         type="email"
                                         value={email_daftar}
                                         onChange={e =>
@@ -294,6 +315,7 @@ const Login = () => {
                                         Username
                                     </span>
                                     <input
+                                        required
                                         type="text"
                                         value={username_daftar}
                                         onChange={e =>
@@ -310,6 +332,7 @@ const Login = () => {
                                         Password Baru
                                     </span>
                                     <input
+                                        required
                                         type="password"
                                         value={password_daftar}
                                         onChange={e =>
@@ -349,6 +372,7 @@ const Login = () => {
                                         Tanggal Lahir
                                     </span>
                                     <input
+                                        required
                                         type="date"
                                         value={tanggal_lahir}
                                         onChange={e =>
@@ -369,6 +393,7 @@ const Login = () => {
                                             key={index}
                                             className="w-full h-auto my-1 radio-referensi border-2 rounded-md max-w-[45%] m-1">
                                             <input
+                                                required
                                                 value={item.title}
                                                 onChange={e =>
                                                     setReferensi(
@@ -415,6 +440,7 @@ const Login = () => {
                                         Kota / Kabupaten
                                     </span>
                                     <input
+                                        required
                                         type="text"
                                         value={kota}
                                         onChange={e => setKota(e.target.value)}
@@ -429,6 +455,7 @@ const Login = () => {
                                         Kecamatan
                                     </span>
                                     <input
+                                        required
                                         type="text"
                                         value={kecamatan}
                                         onChange={e =>
@@ -445,6 +472,7 @@ const Login = () => {
                                         Alamat Lengkap
                                     </span>
                                     <input
+                                        required
                                         type="text"
                                         value={alamat_lengkap}
                                         onChange={e =>
@@ -460,6 +488,7 @@ const Login = () => {
                         <div className="privacy&policy">
                             <div className="flex flex-row">
                                 <input
+                                    required
                                     type="checkbox"
                                     className="checkbox"
                                     id="checkbox-1"
