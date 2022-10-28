@@ -1,0 +1,163 @@
+.radio-buttons {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .custom-radio input {
+    display: none;
+  }
+
+  .radio-voucher input {
+    display: none;
+  }
+
+  .radio-referensi input {
+    display: none;
+  }
+  .labels-referensi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    height: 40px;
+    margin: auto;
+    text-align: center;
+    overflow: hidden;
+  }
+  .radio-referensi input:checked + .labels-referensi {
+    border-width: 2px;
+    --tw-border-opacity: 1;
+    border-color: #525252;
+    border-radius: 0.375rem;
+    opacity: 1;
+    background-color: #525252;
+  }
+  .labels-referensi > * {
+    width: 100px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 2rem;
+  }
+
+  .labels-voucher {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+  }
+
+  .radio-voucher input:checked + .labels-voucher {
+    border-width: 1px;
+    --tw-border-opacity: 1;
+    border-color: #15803d;
+    border-radius: 0.375rem;
+    opacity: 1;
+  }
+
+  .labels-voucher > * {
+    width: 100px;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 2rem;
+  }
+
+  .radio-btn {
+    margin: 3px;
+    width: 60px;
+    height: 50px;
+    border: 3px solid transparent;
+    display: inline-block;
+    border-radius: 10px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 0 20px #c3c3c367;
+    cursor: pointer;
+  }
+
+
+  .radio-btn h3 {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 115%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .custom-radio input:checked + .radio-btn {
+    border: 2px solid #000;
+    /* shadow */
+    box-shadow: 0 0 20px #c3c3c367;
+    /* text in */
+    transform: translateY(-5px);
+    
+  }
+
+  
+  
+  
+  .myAnimate {
+    animation: mymove 500ms ease-in-out;
+  }
+
+  @keyframes mymove {
+    0% {
+      transform: translateX(-160px);
+    }
+    
+    100% {
+      transform: translateX(0px);
+    }
+   
+  }
+
+  .swiperflashsale {
+    display: flex;
+    width: 350px;
+    scroll-snap-type: mandatory;
+    scroll-behavior: smooth;
+    scroll-padding: 25px;
+    column-gap: 20px;
+  }
+  .cardx {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    padding: 30px;
+  }
+  .text-stroke {
+      opacity: 0.8;
+    text-shadow: -2px -2px 0 #1e293b, 1px -1px 0 #1e293b, -1px 1px 0 #1e293b, 1px 1px 0 #1e293b;
+  }
+  .text-stroke2 {
+    opacity: 0.6;
+    text-shadow: -1px -1px 0 #1e293b, 1px -1px 0 #1e293b, -1px 1px 0 #1e293b, 1px 1px 0 #1e293b;  }
+  /* hover text-stroke */
+  .text-stroke:hover {
+    text-shadow: -2px -2px 0 #1e293b, 1px -1px 0 #1e293b, -1px 1px 0 #1e293b, 1px 1px 0 #1e293b;
+    opacity: 1;
+  }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+  
+  
+
+
+

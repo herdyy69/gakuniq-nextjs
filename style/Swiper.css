@@ -1,0 +1,63 @@
+.swiper {
+  width: 100vw;
+  height: 110vh;
+}
+
+.swiper2 {
+  width: 95vw;
+  height: auto;
+}
+.swiper3 {
+  width: 99vw;
+  height: 35vh;
+}
+.swiper4 {
+  width: 50vw;
+  height: 75vh;
+}
+
+.parallax-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 150%;
+  height: 100%;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-position: center;
+}
+
+
+@media (max-width: 768px) {
+  .swiper {
+    width: 100%;
+    height: 50vh;
+  }
+}
+
+.swiper-slide {
+  text-align: start;
+  font-size: 18px;
+  background: transparent;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+/* .swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} */

@@ -1,0 +1,479 @@
+<div className="flex flex-col mt-5">
+                                        <div className="flex justify-between border-y-2 py-3">
+                                            <span>VOUCHER</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div className="card card-side w-full h-full bg-[#404040] border-slate-800 shadow-xl">
+                    //     <figure>
+                    //         <div className="bg-slate-800 w-64 h-80 items-center justify-center"></div>
+                    //     </figure>
+                    //     <div className="card-body text-white">
+                    //         <h2 className="card-title">{data.title}</h2>
+                    //         <span className="text-lg overflow-visible">
+                    //             {data.desc}{' '}
+                    //         </span>
+                    //         <span className="text-lg font-bold">
+                    //             Rp {data.harga}
+                    //         </span>
+                    //         <div className="flex flex-row flex-nowrap items-center">
+                    //             <div className="badge rounded-[5px] p-3 bg-red-500 border-hidden text-white font-bold">
+                    //                 {data.discount}%
+                    //             </div>
+                    //             <span className="text-xs font-light line-through mx-2">
+                    //                 Rp {data.hargaDiscount}{' '}
+                    //             </span>
+                    //         </div>
+                    //         <p></p>
+                    //         <div className="card-actions justify-start">
+                    //             <button className="btn bg-red-700 border-none text-white">
+                    //                 BUY NOW!
+                    //             </button>
+                    //         </div>
+                    //     </div>
+                    // </div>
+pake multiple file input
+
+ <>
+                    <span className="text-sm font-extrabold">
+                        {onCart} PRODUK
+                    </span>
+                    <div className="flex flex-row flex-wrap md:flex-nowrap sm:flex-row">
+                        <div className="flex flex-col">
+                            {data.map(data => (
+                                <div
+                                    className="md:w-[50vw] bg-transparent m-1 p-2"
+                                    key={data.id}>
+                                    <div className="flex flex-row flex-wrap">
+                                        <div className="flex bg-black w-[20rem] h-[15rem]"></div>
+                                        <div className="flex flex-col mx-5">
+                                            <h1 className="text-lg md:text-2xl font-bold">
+                                                {data.product_title}
+                                                <NavLink
+                                                    href={{
+                                                        pathname: '/transaksi',
+                                                    }}
+                                                    active={
+                                                        router.pathname ===
+                                                        '/transaksi'
+                                                    }>
+                                                    <span className="text-2xl text-red-600 font-bold">
+                                                        X
+                                                    </span>
+                                                </NavLink>
+                                            </h1>
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                KODE 12312321212
+                                            </span>
+                                            <span className="text-xs md:text-sm font-extralight">
+                                                WARNA {data.color}
+                                            </span>
+                                            <span className="text-xs md:text-sm font-extralight">
+                                                UKURAN {data.size}
+                                            </span>
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                New, Limited Store
+                                            </span>
+                                            <h2 className="text-lg font-bold mt-3">
+                                                Rp {data.harga}
+                                            </h2>
+                                            <div className="flex items-center justify-between">
+                                                <h1 className="text-sm md:text-lg font-bold">
+                                                    JUMLAH
+                                                </h1>
+                                                <h1 className="text-sm md:text-lg font-bold border-2 px-2">
+                                                    {data.qty}
+                                                </h1>
+                                            </div>
+                                            <h2 className="text-lg font-bold mt-3">
+                                                SUBTOTAL Rp
+                                                {data.harga * data.qty}
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex flex-col">
+                            <div
+                                className="w-[full] bg-transparent m-1 p-2"
+                                key={data.id}>
+                                <div className="flex flex-col">
+                                    <div className="flex flex-col border-2 rounded-lg p-5">
+                                        <h1 className="text-lg md:text-lg font-bold">
+                                            RINGKASAN PESANAN {totalQty} PRODUCT
+                                        </h1>
+                                        <div className="flex justify-between my-2">
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                SUBTOTAL PRODUCT
+                                            </span>
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                Rp {totalHarga}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between my-2">
+                                            <h1 className="text-lg md:text-lg font-bold">
+                                                SUBTOTAL
+                                            </h1>
+                                            <h1 className="text-lg md:text-lg font-bold">
+                                                Rp {totalHarga}
+                                            </h1>
+                                        </div>
+                                        <div className="flex justify-between my-2">
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                TERMASUK PPN
+                                            </span>
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                Rp {ppn}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between my-2">
+                                            <h1 className="text-lg md:text-lg font-bold">
+                                                TOTAL PESANAN
+                                            </h1>
+                                            <h1 className="text-lg md:text-lg font-bold">
+                                                Rp {totalHargaPpn}
+                                            </h1>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col border-y-2 py-3 mt-5">
+                                        <NavLink
+                                            href={{
+                                                pathname: '/checkout',
+                                            }}
+                                            active={
+                                                router.pathname === '/checkout'
+                                            }>
+                                            <button className="btn w-full">
+                                                LANJUT KE PEMBAYARAN
+                                            </button>
+                                        </NavLink>
+                                        <NavLink
+                                            href={{
+                                                pathname: '/katalog',
+                                            }}
+                                            active={
+                                                router.pathname === '/katalog'
+                                            }>
+                                            <button className="btn w-full">
+                                                LANJUT BELANJA
+                                            </button>
+                                        </NavLink>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+    const data = [
+        {
+            id: 1,
+            product_title: 'Costanza Bendelow',
+            harga: 10000,
+            qty: 1,
+            color: 'Goldenrod',
+            size: 'M',
+            type: 'BFZ',
+            image: 'http://dummyimage.com/82x92.png/5fa2dd/ffffff',
+        },
+        {
+            id: 2,
+            product_title: 'Costanza Bendelow',
+            harga: 20000,
+            qty: 3,
+            color: 'Goldenrod',
+            size: 'M',
+            type: 'BFZ',
+            image: 'http://dummyimage.com/82x92.png/5fa2dd/ffffff',
+        },
+    ]
+
+    const totalQty = data.reduce((acc, item) => {
+        return acc + item.qty
+    }, 0)
+    const totalHarga = data.reduce((acc, item) => {
+        return acc + item.harga * item.qty
+    }, 0)
+    const ppn = totalHarga * 0.1
+    const totalHargaPpn = totalHarga - ppn
+
+    {/* <span className="text-sm font-extrabold">
+                        {onCart} PRODUK
+                    </span>
+                    <div className="flex flex-row flex-wrap md:flex-nowrap sm:flex-row">
+                        <div className="flex flex-col border-2">
+                            <div className="md:w-[50vw] bg-transparent m-0 p-2">
+                                <div className="flex flex-row">
+                                    <div className="flex flex-col py-2 border-y-2 w-full">
+                                        <h1 className="text-sm md:text-lg font-bold mb-3">
+                                            ALAMAT PENGIRIMAN
+                                        </h1>
+                                        <span className="text-sm font-thin">
+                                            NAMA NULL
+                                        </span>
+                                        <span className="text-sm font-thin w-[50%]">
+                                            sasaassssssssss, aaaaaaa, Lampung,
+                                            Kab. Lampung Barat 40376 22222222 /
+                                            2222222222222
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col my-2">
+                                    <div className="flex flex-col py-2 border-y-2 w-full">
+                                        <h1 className="text-sm md:text-lg font-bold mb-3">
+                                            PEMBAYARAN
+                                        </h1>
+                                        <select
+                                            value={value}
+                                            onChange={e => {
+                                                setValue(e.target.value)
+                                            }}>
+                                            <option value="GAKUNIQ WALLET">
+                                                GAKUNIQ WALLET
+                                            </option>
+                                            <option value="OTHER E-WALLET">
+                                                OTHER E-WALLET
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div className="flex flex-col py-2 border-b-2 w-full">
+                                        <h1 className="text-sm md:text-lg font-bold mb-3">
+                                            VOUCHER
+                                        </h1>
+                                        <select
+                                            value={voucher}
+                                            onChange={e => {
+                                                setVoucher(e.target.value)
+                                            }}>
+                                            {voucherOptions.map(
+                                                voucherOption => (
+                                                    <option
+                                                        discount={
+                                                            voucherOption.discount
+                                                        }
+                                                        value={
+                                                            voucherOption.value
+                                                        }>
+                                                        {voucherOption.label}
+                                                    </option>
+                                                ),
+                                            )}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                className="md:w-[50vw] bg-transparent m-0 p-2 "
+                                key={data.id}>
+                                <div className="flex flex-col">
+                                    <div className="flex flex-col border-2 p-5 w-full">
+                                        <h1 className="text-lg md:text-lg font-bold">
+                                            RINGKASAN PESANAN {totalQty} PRODUCT
+                                        </h1>
+                                        <div className="flex justify-between my-2">
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                SUBTOTAL PRODUCT
+                                            </span>
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                Rp {totalHarga}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between my-2">
+                                            <h1 className="text-lg md:text-lg font-bold">
+                                                SUBTOTAL
+                                            </h1>
+                                            <h1 className="text-lg md:text-lg font-bold">
+                                                Rp {totalHarga}
+                                            </h1>
+                                        </div>
+                                        <div className="flex justify-between my-2">
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                TERMASUK PPN
+                                            </span>
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                Rp {ppn}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between my-2">
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                DISCOUNT {discountX}%
+                                            </span>
+                                            <span className="text-xs md:text-sm font-extralight text-[#7a7a7a]">
+                                                Rp {discount}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between my-2">
+                                            <h1 className="text-lg md:text-lg font-bold">
+                                                TOTAL PESANAN
+                                            </h1>
+                                            <h1 className="text-lg md:text-lg font-bold">
+                                                Rp {allPrice}
+                                            </h1>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col border-y-2 py-3 mt-5">
+                                        <button
+                                            className="bg-[#ff5a5f] text-white font-bold py-2 px-4 rounded-full"
+                                            onClick={() => {
+                                                handleCheckout()
+                                            }}>
+                                            KONFIRMASI
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col"></div>
+                    </div> */}
+
+                    / const handleAdd = () => {
+    //     const newVoucher = {
+    //         id: voucher.length + 1,
+    //         voucher: inputVoucher,
+    //         nominal: 10000,
+    //         expired: '2021-12-31',
+    //     }
+    //     setVoucher([...voucher, newVoucher])
+    //     setInputVoucher('')
+    //     inputRef.current.focus()
+
+    // }
+
+
+
+    <header className="bg-[#FFFFFF] shadow my-1">
+                <div className="mx-auto py-0 md:py-0 px-4 sm:px-6 lg:px-8 shadow ">
+                    <div className="flex md:hidden flex-row flex-wrap items-center justify-center pt-1">
+                        <NavLink
+                            href={{
+                                pathname: '/kategori/wanita',
+                            }}
+                            active={router.pathname === '/kategori/wanita'}>
+                            <span
+                                onMouseEnter={() => {
+                                    setDataCategory(HoverCategoryWanita())
+                                }}
+                                className="text-[12px] font-extrabold px-1">
+                                WANITA
+                            </span>
+                        </NavLink>
+                        <NavLink
+                            href={{
+                                pathname: '/kategori/pria',
+                            }}
+                            active={router.pathname === '/kategori/pria'}>
+                            <span
+                                onMouseEnter={() => {
+                                    setDataCategory(HoverCategoryPria())
+                                }}
+                                className="text-[12px] font-extrabold px-1">
+                                PRIA
+                            </span>
+                        </NavLink>
+                        {/* <NavLink
+                            href={{
+                                pathname: '/nav-item/cari',
+                            }}
+                            active={router.pathname === '/nav-item/cari'}>
+                            <span
+                                onMouseEnter={() => {
+                                    setDataCategory(HoverCategoryAnak())
+                                }}
+                                className="text-[12px] font-extrabold px-1">
+                                ANAK
+                            </span>
+                        </NavLink> */}
+                    </div>
+                </div>
+            </header>
+
+               // <GuestLayout>
+        //     {validation.message && (
+        //         <div className="toast toast-start">
+        //             <div className="alert alert-info">
+        //                 <div>
+        //                     <span>{validation.message}</span>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     )}
+        //     <AuthCard
+        //         logo={
+        //             <Link href="/">
+        //                 <a>
+        //                     <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
+        //                 </a>
+        //             </Link>
+        //         }>
+        //         <form onSubmit={loginHandler}>
+        //             <div>
+        //                 <Label htmlFor="email">Email</Label>
+
+        //                 <Input
+        //                     id="email"
+        //                     type="email"
+        //                     value={email}
+        //                     className="block mt-1 w-full"
+        //                     onChange={e => setEmail(e.target.value)}
+        //                     required
+        //                     autoFocus
+        //                 />
+        //             </div>
+        //             {validation.email && (
+        //                 <div className="alert alert-danger">
+        //                     {validation.email[0]}
+        //                 </div>
+        //             )}
+
+        //             <div className="mt-4">
+        //                 <Label htmlFor="password">Password</Label>
+
+        //                 <Input
+        //                     id="password"
+        //                     type="password"
+        //                     value={password}
+        //                     className="block mt-1 w-full"
+        //                     onChange={e => setPassword(e.target.value)}
+        //                     required
+        //                     autoComplete="current-password"
+        //                 />
+        //             </div>
+        //             {validation.password && (
+        //                 <div className="alert alert-danger">
+        //                     {validation.password[0]}
+        //                 </div>
+        //             )}
+
+        //             <div className="block mt-4">
+        //                 <label
+        //                     htmlFor="remember_me"
+        //                     className="inline-flex items-center">
+        //                     <input
+        //                         id="remember_me"
+        //                         type="checkbox"
+        //                         name="remember"
+        //                         className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        //                     />
+
+        //                     <span className="ml-2 text-sm text-gray-600">
+        //                         Remember me
+        //                     </span>
+        //                 </label>
+        //             </div>
+
+        //             <div className="flex items-center justify-end mt-4">
+        //                 <Link href="/forgot-password">
+        //                     <a className="underline text-sm text-gray-600 hover:text-gray-900">
+        //                         Forgot your password?
+        //                     </a>
+        //                 </Link>
+
+        //                 <Button className="ml-3">Login</Button>
+        //             </div>
+        //         </form>
+        //     </AuthCard>
+        // </GuestLayout>
