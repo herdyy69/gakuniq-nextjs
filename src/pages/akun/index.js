@@ -1,184 +1,98 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import User from '@/components/UserComponent/user'
-import Input from '@/components/Input'
-import { useAuth } from '@/hooks/auth'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
+import axios from 'axios'
 
 const Profiles = () => {
-    const formAlamatFix = () => {
-        const [form, setForm] = React.useState()
+    const Router = useRouter()
+    const token = Cookies.get('token')
+    const [user, setUser] = useState({})
 
-        const handleChange = e => {
-            setForm({
-                ...form,
-                [e.target.name]: e.target.value,
-            })
-        }
-
-        const buttonSubmit = () => {
-            const json = JSON.stringify(form)
-            console.log(json)
-            // send to api
-            // fetch('http://localhost:3000/api/alamat', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: json,
-            // })
-            //     .then(res => res.json())
-            //     .then(data => {
-            //         console.log(data)
-            //     })
-
-            // clear form
-            setForm('')
-        }
-        return (
-            <form>
-                <div className="flex flex-col">
-                    <span className="my-1">
-                        <div className="inline-flex flex-col">
-                            <label className="text-sm">NAMA PENERIMA</label>
-                            <Input
-                                onChange={e => {
-                                    setForm({
-                                        ...form,
-                                        namaPenerima: e.target.value,
-                                    })
-                                }}
-                                className={'border-2 w-[full]'}
-                                type="text"
-                                placeholder="Input Here"
-                                values=""
-                            />
-                        </div>
-                    </span>
-
-                    <span className="my-1">
-                        <div className="inline-flex flex-col">
-                            <label className="text-sm">NOMER TELEPON</label>
-                            <Input
-                                onChange={e => {
-                                    setForm({
-                                        ...form,
-                                        nomerTelepon: e.target.value,
-                                    })
-                                }}
-                                className={'border-2 w-[full]'}
-                                type="text"
-                                placeholder="Input Here"
-                                values=""
-                            />
-                        </div>
-                    </span>
-
-                    <span className="my-1">
-                        <div className="flex flex-row flex-wrap">
-                            <div className="inline-flex flex-col">
-                                <label className="text-sm">LABEL ALAMAT</label>
-                                <select
-                                    onChange={e => {
-                                        setForm({
-                                            ...form,
-                                            labelAlamat: e.target.value,
-                                        })
-                                    }}
-                                    className="border-2 rounded-md">
-                                    <option value="Rumah">Rumah</option>
-                                    <option value="Kantor">Kantor</option>
-                                    <option value="Lainnya">Lainnya</option>
-                                </select>
-                            </div>
-                            <div className="inline-flex flex-col mx-0 md:mx-2">
-                                <label className="text-sm">
-                                    Kota & Kecamatan
-                                </label>
-                                <Input
-                                    onChange={e => {
-                                        setForm({
-                                            ...form,
-                                            kotaKecamatan: e.target.value,
-                                        })
-                                    }}
-                                    className={'border-2'}
-                                    type="text"
-                                    placeholder="Input Here"
-                                    values=""
-                                />
-                            </div>
-                        </div>
-                    </span>
-
-                    <span className="my-1">
-                        <div className="inline-flex flex-col">
-                            <label className="text-sm">Alamat Lengkap</label>
-                            <Input
-                                onChange={e => {
-                                    setForm({
-                                        ...form,
-                                        alamatLengkap: e.target.value,
-                                    })
-                                }}
-                                className={'border-2 w-[full]'}
-                                type="text"
-                                placeholder="Input Here"
-                                values=""
-                            />
-                        </div>
-                    </span>
-                </div>
-
-                <span
-                    onClick={() => {
-                        buttonSubmit()
-                    }}
-                    className="bg-green-500 text-sm font-bold rounded-md p-2 mt-2 mx-1 text-white">
-                    CHANGE
-                </span>
-                <button className="bg-red-600 text-sm font-bold rounded-md p-2 mt-2 mx-1 text-white">
-                    KEMBALI
-                </button>
-            </form>
-        )
+    const fetchData = async () => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        await axios.get(`http://127.0.0.1:8000/api/user`).then(response => {
+            setUser(response.data)
+        })
     }
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    console.log(user)
 
     return (
         <User>
-            <div>
-                <div className="p-4 m-2 border-2 rounded-lg max-w-[full] overflow-hidden">
-                    <div className="flex flex-row">
-                        <div className="inline-flex">
-                            <img src="/logo.png" className="max-w-[85px]" />
-                        </div>
-                        <div className="inline-flex">
-                            <div className="flex items-center pt-0">
-                                <div className="flex flex-col justify-between">
-                                    <span className="text-sm font-bold">
-                                        HERDYANSAH
-                                    </span>
-
-                                    <span className="text-sm font-normal">
-                                        Herdyansah203@gmail.com
-                                    </span>
-                                    <div className="flex items-center justify-center bg-slate-500 max-w-[70px] rounded-md mt-1">
-                                        <p className="text-xs font-bold text-white">
-                                            MEMBER
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div className="flex flex-row py-6 px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col items-center bg-slate-200 px-3 py-4 rounded-lg max-w-[16rem] max-h-96 shadow-2xl">
+                    <img src="/logo.png" className="w-60 h-60" />
+                    <button className="w-[13rem] bg-slate-800 text-white font-bold py-2 px-5 rounded">
+                        Ganti Foto
+                    </button>
+                    <p className="w-[13rem] text-sm text-slate-800 py-2 mx-5">
+                        Foto profil harus berupa gambar dengan format .jpg,
+                        .jpeg, atau .png
+                    </p>
                 </div>
-
-                <div className="m-2 border-2 rounded-lg max-w-[full]">
-                    <div className="flex flex-col m-2">
-                        <div className="heading">
-                            <h1 className="text-sm font-bold">ALAMAT</h1>
-                            <hr className="border-[1px] border-[#f4f4f4] my-1" />
-                        </div>
-                        <div className="body">{formAlamatFix()}</div>
-                    </div>
+                <span className="m-4"></span>
+                <div className="flex flex-col items-start bg-slate-200 px-6 py-7 rounded-lg w-full max-w-[35vw] shadow-2xl">
+                    <h1 className="text-lg text-slate-800 font-bold">
+                        Informasi Akun
+                    </h1>
+                    <span className="my-2"></span>
+                    <table className="table-fixed text-slate-800">
+                        <tr>
+                            <td className="min-w-[15rem]">Nama</td>
+                            <td className="min-w-[15rem]">
+                                {user.nama_depan} {user.nama_belakang}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="min-w-[15rem]">Tanggal Lahir</td>
+                            <td className="min-w-[15rem]">{user.tanggal_lahir}</td>
+                        </tr>
+                        <tr>
+                            <td className="min-w-[15rem]">Jenis Kelamin</td>
+                            <td className="min-w-[15rem]">{user.jenis_kelamin}</td>
+                        </tr>
+                    </table>
+                    <span className="my-2"></span>
+                    <h1 className="text-lg text-slate-800 font-bold">
+                        Informasi Kontak
+                    </h1>
+                    <span className="my-2"></span>
+                    <table className="table-fixed text-slate-800">
+                        <tr>
+                            <td className="min-w-[15rem]">Email</td>
+                            <td className="min-w-[15rem]">{user.email}</td>
+                        </tr>
+                        <tr>
+                            <td className="min-w-[15rem]">Nomor Telepon</td>
+                            <td className="min-w-[15rem]">{user.nomer_telepon}</td>
+                        </tr>
+                    </table>
+                    <span className="my-2"></span>
+                    <h1 className="text-lg text-slate-800 font-bold">
+                        Informasi Alamat
+                    </h1>
+                    <span className="my-2"></span>
+                    <table className="table-fixed text-slate-800">
+                        <tr>
+                            <td className="w-96">Label Alamat</td>
+                            <td className="min-w-[15rem]">{user.label_alamat}</td>
+                        </tr>
+                        <tr>
+                            <td className="min-w-[15rem]">Kota / Kecamatan</td>
+                            <td className="min-w-[15rem]">{user.kota_kecamatan}</td>
+                        </tr>
+                        <tr>
+                            <td className="min-w-[15rem]">Alamat Lengkap</td>
+                            <td className="min-w-[15rem]">{user.alamat_lengkap}</td>
+                        </tr>
+                    </table>
+                    <button className="w-[13rem] bg-slate-800 text-white font-bold py-2 px-5 rounded mt-4">
+                        Ubah Informasi
+                    </button>
                 </div>
             </div>
         </User>

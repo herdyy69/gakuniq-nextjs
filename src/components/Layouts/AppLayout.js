@@ -2,7 +2,7 @@ import Nav from '@/components/Layouts/Nav'
 import Footer from './Footer'
 import { useRouter } from 'next/router'
 
-const AppLayout = ({ header, children, ...props }) => {
+const AppLayout = ({ header, children, className, ...props }) => {
     const router = useRouter()
 
     return (
@@ -14,7 +14,6 @@ const AppLayout = ({ header, children, ...props }) => {
                 ) : (
                     ' '
                 )}
-                {/* Page Heading */}
                 {router.pathname === '/beranda' ? (
                     ''
                 ) : (

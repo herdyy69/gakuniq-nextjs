@@ -10,7 +10,9 @@ const Login = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [validation, setValidation] = useState([])
     const [showAlert, setShowAlert] = useState([], true)
+    const [confirmation, setConfirmation] = useState('')
     const [colorAlert, setColorAlert] = useState('bg-red-500')
 
     const loginHandler = async e => {
@@ -112,12 +114,22 @@ const Login = () => {
             })
             .then(response => {
                 console.log(response)
-                Router.push('/login')
+                setTimeout(() => {
+                    Router.reload('/login')
+                }, 2000)
+                setConfirmation('Berhasil mendaftar, silahkan login')
             })
             .catch(error => {
                 console.log(error)
+                setValidation(error.response.data)
             })
+        console.log(validation)
     }
+
+    useEffect(() => {}, [validation])
+
+    console.log(confirmation)
+
     return (
         <div className="antialiased">
             <Head>
@@ -131,6 +143,23 @@ const Login = () => {
                             <button
                                 className="bg-transparent text-2xl font-semibold leading-none outline-none focus:outline-none"
                                 onClick={() => setShowAlert(false)}>
+                                <span>×</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {confirmation && (
+                <div className="toast toast-start  z-[1000] absolute">
+                    <div
+                        className={
+                            'alert alert-success bg-green-600 text-white'
+                        }>
+                        <div className="flex flex-row">
+                            <span>{confirmation}</span>
+                            <button
+                                className="bg-transparent text-xl hover:text-red-600 font-semibold leading-none outline-none focus:outline-none"
+                                onClick={() => setConfirmation('')}>
                                 <span>×</span>
                             </button>
                         </div>
@@ -180,7 +209,6 @@ const Login = () => {
                                         htmlFor="remember_me"
                                         className="inline-flex items-start">
                                         <input
-                                            required
                                             id="remember_me"
                                             type="checkbox"
                                             name="remember"
@@ -223,12 +251,7 @@ const Login = () => {
                     </form>
                 </div>
             </div>
-            <input
-                required
-                type="checkbox"
-                id="my-modal-3"
-                className="modal-toggle"
-            />
+            <input type="checkbox" id="my-modal-3" className="modal-toggle" />
             <div className="modal ">
                 <div className="modal-box w-[40%] max-w-5xl relative bg-slate-500">
                     <label
@@ -241,8 +264,8 @@ const Login = () => {
                     </h3>
                     <form onSubmit={handleRegister}>
                         <div className="flex flex-col md:flex-row flex-wrap my-2">
-                            <div className="form-control m-1">
-                                <label className="input-group input-group-vertical w-full max-w-[15rem]">
+                            <div className="form-control m-1  w-full max-w-[auto] md:max-w-[15rem]">
+                                <label className="input-group input-group-vertical">
                                     <span className="bg-slate-600 font-bold text-white py-1">
                                         Nama Depan
                                     </span>
@@ -258,8 +281,8 @@ const Login = () => {
                                     />
                                 </label>
                             </div>
-                            <div className="form-control m-1">
-                                <label className="input-group input-group-vertical w-full max-w-[15rem]">
+                            <div className="form-control m-1  w-full max-w-[auto] md:max-w-[15rem]">
+                                <label className="input-group input-group-vertical">
                                     <span className="bg-slate-600 font-bold text-white py-1">
                                         Nama Belakang
                                     </span>
@@ -308,6 +331,11 @@ const Login = () => {
                                         className="input input-bordered bg-slate-100 bg-opacity-100"
                                     />
                                 </label>
+                                {validation.email && (
+                                    <span className="text-red-200 text-xs mt-1">
+                                        {validation.email[0]}
+                                    </span>
+                                )}
                             </div>
                             <div className="form-control m-1 w-full max-w-[100%]">
                                 <label className="input-group input-group-vertical">
@@ -325,6 +353,11 @@ const Login = () => {
                                         className="input input-bordered bg-slate-100 bg-opacity-100"
                                     />
                                 </label>
+                                {validation.username && (
+                                    <span className="text-red-200 text-xs mt-1">
+                                        {validation.username[0]}
+                                    </span>
+                                )}
                             </div>
                             <div className="form-control m-1 w-full max-w-[100%]">
                                 <label className="input-group input-group-vertical">
@@ -345,8 +378,13 @@ const Login = () => {
                                         className="input input-bordered bg-slate-100 bg-opacity-100"
                                     />
                                 </label>
+                                {validation.password && (
+                                    <span className="text-red-200 text-xs mt-1">
+                                        {validation.password[0]}
+                                    </span>
+                                )}
                             </div>
-                            <div className="form-control m-1 w-full max-w-[45.7%]">
+                            <div className="form-control m-1 w-full max-w-[auto] md:max-w-[45.7%]">
                                 <label className="input-group input-group-vertical">
                                     <span className="bg-slate-600 font-bold text-white py-1">
                                         Jenis Kelamin
@@ -366,7 +404,7 @@ const Login = () => {
                                     </select>
                                 </label>
                             </div>
-                            <div className="form-control m-1 w-full max-w-[50%]">
+                            <div className="form-control m-1 w-full max-w-[auto] md:max-w-[50%]">
                                 <label className="input-group input-group-vertical">
                                     <span className="bg-slate-600 font-bold text-white py-1">
                                         Tanggal Lahir
@@ -406,7 +444,7 @@ const Login = () => {
                                                 name="voucher-referensi"
                                             />
                                             <span className="labels-referensi p-3 border-slate-800">
-                                                <span className="text-sm font-bold text-white">
+                                                <span className="text-xs md:text-sm font-bold text-white">
                                                     {item.title}
                                                 </span>
                                             </span>
