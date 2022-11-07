@@ -4,8 +4,11 @@ import Head from 'next/head'
 import SwiperVertical from '@/components/swiperJs/swiperVertical'
 import SwiperHorizontal from '@/components/swiperJs/swiperHorizontal'
 import { References } from '@/components/SectionRefereces/References'
+import Cookies from 'js-cookie'
 
 const Beranda = () => {
+    const token = Cookies.get('token')
+
     return (
         <AppLayout header={''}>
             <Head>
@@ -32,16 +35,19 @@ const Beranda = () => {
                 <span className="bg-slate-200 h-[12px]"></span>
                 <span className="bg-slate-100 h-[12px]"></span>
                 <span className="bg-slate-50 h-[12px]"></span>
-                <div className="py-4 rounded-md bg-slate-50">
-                    <div className="flex flex-col flex-wrap justify-start items-start overflow-hidden">
-                        <h1 className="text-2xl font-bold text-slate-500 mx-5">
-                            Berdasarkan referensimu!
-                        </h1>
-                        <References />
+                {token ? (
+                    <div className="py-4 rounded-md bg-slate-50">
+                        <div className="flex flex-col flex-wrap justify-start items-start overflow-hidden">
+                            <h1 className="text-2xl font-bold text-slate-500 mx-5">
+                                Berdasarkan referensimu!
+                            </h1>
+                            <References />
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    ''
+                )}
             </div>
-
             <div className="flex flex-col bg-[#f4f4f4] w-full h-full items-start md:items-center shadow-lg z-10 border-2">
                 <div className="px-5 md:px-0 py-4">
                     <h1 className="text-2xl text-slate-800 mx-2 mb-3">

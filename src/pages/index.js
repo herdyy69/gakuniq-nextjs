@@ -2,18 +2,18 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 const onProgress = () => {
-    // const [data, setData] = useState()
-    // const Get = async () => {
-    //     await axios
-    //         .get('http://192.168.1.16:8000/api/kategori/')
-    //         .then(response => setData(response.data.data))
-    //         .catch(error => {})
-    // }
-    // useEffect(() => {
-    //     Get()
-    // }, [])
+    const [data, setData] = useState()
+    const Get = async () => {
+        await axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/kategori`)
+            .then(response => setData(response.data.data))
+            .catch(error => {})
+    }
+    useEffect(() => {
+        Get()
+    }, [])
 
-    // console.log(data)
+    console.log(data)
 
     return (
         <div className="relative flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
@@ -26,7 +26,7 @@ const onProgress = () => {
                     <div className="ml-4 text-lg text-gray-500 uppercase tracking-wider">
                         Comming soon...
                     </div>
-                    {/* {data?.map(item => (
+                    {data?.map(item => (
                         <div
                             key={item.id}
                             className="flex flex-col flex-nowrap my-2 md:my-0 mx-2 md:mx-5">
@@ -35,7 +35,7 @@ const onProgress = () => {
                             </h1>
                             <span className="text-sm">Koleksi Atasan</span>
                         </div>
-                    ))} */}
+                    ))}
                 </div>
             </div>
         </div>

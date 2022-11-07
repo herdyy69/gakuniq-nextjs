@@ -10,13 +10,13 @@ import {
     AiFillWallet,
     AiOutlineShoppingCart,
     AiOutlineLogout,
-    AiOutlineLogin,
 } from 'react-icons/ai'
 import { FaCoins } from 'react-icons/fa'
 import { FiSettings } from 'react-icons/fi'
 import { GrMoney, GrTransaction } from 'react-icons/gr'
 import { HiOutlineTicket } from 'react-icons/hi'
 import { GiSelfLove } from 'react-icons/gi'
+import Guest from '../Layouts/Guest'
 
 const User = ({ children }) => {
     const Router = useRouter()
@@ -26,9 +26,9 @@ const User = ({ children }) => {
     const fetchData = async () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
         await axios
-            .get(`http://127.0.0.1:8000/api/user`)
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`)
             .then(response => {
-                setUser(response.data)
+                setUser(response.data.data[0])
             })
             .catch(error => {
                 console.log(error)
@@ -40,10 +40,12 @@ const User = ({ children }) => {
 
     const logoutHandler = async () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        await axios.post(`http://127.0.0.1:8000/api/logout`).then(() => {
-            Cookies.remove('token')
-            Router.push('/login')
-        })
+        await axios
+            .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/logout`)
+            .then(() => {
+                Cookies.remove('token')
+                Router.push('/login')
+            })
     }
     const akunFiturItems = [
         {
@@ -85,6 +87,7 @@ const User = ({ children }) => {
             pathname: '/nav-item/keranjang',
         },
     ]
+
     return (
         <AppLayout
             subTitle={
@@ -117,8 +120,8 @@ const User = ({ children }) => {
             </Head>
             {token ? (
                 <div className="antialiased">
-                    <div className="min-h-screen bg-[#525252] text-white flex flex-row">
-                        <div className="flex flex-col bg-slate-200 w-[50%] py-6 px-4 sm:px-6 lg:px-8 rounded-lg m-4">
+                    <div className="min-h-screen bg-[#525252] text-white flex flex-col md:flex-row items-center md:items-start justify-center">
+                        <div className="flex flex-col bg-slate-200 md:w-[29rem] w-[21rem]  py-6 px-4 rounded-lg m-4">
                             <div className="flex flex-row md:flex-nowrap flex-wrap items-center">
                                 <img src="/logo.png" className="w-20 h-20" />
                                 <span className="mx-1"> </span>
@@ -141,7 +144,15 @@ const User = ({ children }) => {
                                     </span>
                                     <span className="mx-1"> </span>
                                     <h1 className="text-sm text-slate-800 font-bold">
-                                        Rp {user.saldo}
+                                        Rp{' '}
+                                        {user.saldo
+                                            ? user.saldo
+                                                  .toString()
+                                                  .replace(
+                                                      /\B(?=(\d{3})+(?!\d))/g,
+                                                      '.',
+                                                  )
+                                            : 0}
                                     </h1>
                                 </span>
                                 <span className="my-1"></span>
@@ -153,7 +164,15 @@ const User = ({ children }) => {
                                     </span>
                                     <span className="mx-1"> </span>
                                     <h1 className="text-sm text-slate-800 font-bold">
-                                        Rp {user.score}
+                                        Rp{' '}
+                                        {user.score
+                                            ? user.score
+                                                  .toString()
+                                                  .replace(
+                                                      /\B(?=(\d{3})+(?!\d))/g,
+                                                      '.',
+                                                  )
+                                            : 0}
                                     </h1>
                                 </span>
                             </div>
@@ -204,32 +223,13 @@ const User = ({ children }) => {
                                 Keluar
                             </button>
                         </div>
-                        <div className="bg-slate-300 w-full py-6 px-4 sm:px-6 lg:px-8 rounded-lg m-4 overflow-x-auto">
+                        <div className="bg-slate-300 max-w-[auto] md:w-[50rem] rounded-lg m-4 py-6 px-4 sm:px-6 lg:px-8">
                             {children}
                         </div>
                     </div>
                 </div>
             ) : (
-                <div className="antialiased">
-                    <div className="min-h-screen bg-[#525252] text-white flex flex-row">
-                        <div className="flex flex-col items-start justify-center bg-slate-200 w-full py-6 px-4 sm:px-6 lg:px-8 rounded-lg m-4">
-                            <h1 className="text-5xl text-slate-800 font-bold">
-                                Anda belum login
-                            </h1>
-                            <p className="text-2xl text-slate-800">
-                                Silahkan login terlebih dahulu
-                            </p>
-                            <span className="my-1"></span>
-                            <Link href="/login">
-                                <button className="bg-red-800 btn glass flex flex-row items-center text-3xl font-bold">
-                                    <AiOutlineLogin className="text-xl" />
-                                    <span className="mx-1"> </span>
-                                    Login
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+                <Guest />
             )}
         </AppLayout>
     )

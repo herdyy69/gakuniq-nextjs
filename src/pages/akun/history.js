@@ -6,7 +6,7 @@ const History = () => {
     return (
         <User>
             <div>
-                <div className="p-4 m-2 border-2 rounded-lg max-w-[full] overflow-hidden">
+                <div className="p-4 m-2 border-2 border-[#525252] bg-slate-500 rounded-lg max-w-[full] overflow-hidden">
                     <div className="flex flex-col">
                         <div className="flex flex-row flex-nowrap items-center w-full">
                             <Input
@@ -45,7 +45,7 @@ const History = () => {
                     </div>
                 </div>
 
-                <div className="m-2 border-2 rounded-lg max-w-[full]">
+                <div className="m-2 border-2 border-[#525252] bg-slate-500 rounded-lg max-w-[full]">
                     <div className="flex flex-col m-2">
                         <div className="body">
                             <div className="flex flex-row flex-nowrap items-start w-full">
@@ -83,7 +83,7 @@ const History = () => {
                     </div>
                 </div>
 
-                <div className="m-2 border-2 rounded-lg max-w-[full]">
+                <div className="m-2 border-2 border-[#525252] bg-slate-500 rounded-lg max-w-[full]">
                     <div className="flex flex-col m-2">
                         <div className="body">
                             <div className="flex flex-row flex-nowrap items-start w-full">

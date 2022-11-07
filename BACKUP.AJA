@@ -477,3 +477,84 @@ pake multiple file input
         //         </form>
         //     </AuthCard>
         // </GuestLayout>
+
+
+         //   two value
+                                                        value={`${item.id}`}
+                                                        onChange={e => {
+                                                            if (
+                                                                e.target.checked
+                                                            ) {
+                                                                setKeranjang([
+                                                                    ...keranjang,
+                                                                    e.target
+                                                                        .value,
+                                                                ])
+                                                                setTotal([
+                                                                    ...total,
+                                                                    e.target
+                                                                        .value,
+                                                                ])
+                                                            } else {
+                                                                e.target.checked = false
+
+                                                                setKeranjang(
+                                                                    keranjang.filter(
+                                                                        item =>
+                                                                            item !==
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                    ),
+                                                                )
+                                                                setTotal(
+                                                                    total.filter(
+                                                                        item =>
+                                                                            item !==
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                    ),
+                                                                )
+                                                            }
+                                                        }}
+
+
+                                                        {[data]?.map(item => (
+                            <span className="bg-slate-800 min-w-[30vw] max-w-[30vw] min-h-[20vh] rounded-sm m-1 flex flex-row items-center justify-start overflow-hidden">
+                                <img
+                                    src="/logo.png"
+                                    className="w-[100px] h-auto mx-1"
+                                />
+                                <div className="flex flex-col mx-1">
+                                    <h1 className="text-lg font-bold text-white"></h1>
+                                    <p className="text-sm text-white">
+                                        {/* {product.type}, {product.color},{' '}
+                                        {product.size} */}
+                                    </p>
+                                    <p className="text-sm text-white">
+                                        {/* {product.qty} x Rp {product.harga} */}
+                                    </p>
+                                    <p className="text-sm font-bold text-white">
+                                        {/* Rp {product.qty * product.harga} */}
+                                    </p>
+                                </div>
+                            </span>
+                        ))}
+
+                            // params.map(async id => {
+        //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        //     await axios
+        //         .get(`http://192.168.1.19:8000/api/keranjang/${id}`)
+        //         .then(response => {
+        //             var history = []
+        //             history.push(response.data.data)
+        //             setData(history)
+        //         })
+        //         .catch(error => {
+        //             console.log(error)
+        //         })
+        // })
+
+
+        

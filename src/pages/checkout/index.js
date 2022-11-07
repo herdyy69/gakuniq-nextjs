@@ -1,60 +1,100 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AppLayout from '@/components/Layouts/AppLayout'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
+import axios from 'axios'
 
 const Checkout = () => {
-    const products = [
-        {
-            id: 1,
-            product_title: 'Costanza Bendelow',
-            harga: 10000,
-            qty: 1,
-            color: 'Goldenrod',
-            size: 'M',
-            type: 'BFZ',
-            image: 'http://dummyimage.com/82x92.png/5fa2dd/ffffff',
-        },
-        {
-            id: 2,
-            product_title: 'Costanza Bendelow',
-            harga: 10000,
-            qty: 2,
-            color: 'Goldenrod',
-            size: 'M',
-            type: 'BFZ',
-            image: 'http://dummyimage.com/82x92.png/5fa2dd/ffffff',
-        },
-    ]
+    const router = useRouter()
+    const token = Cookies.get('token')
+    const [data, setData] = useState()
+    const [user, setUser] = useState({})
+    const [voucherme, setVoucherme] = useState()
 
-    const totalQty = products.reduce((acc, item) => acc + item.qty, 0)
-    const totalPrice = products.reduce((acc, item) => totalQty * item.harga, 0)
+    const [params, setParams] = useState(router.query.id)
 
-    const [wallet, setWallet] = useState('GAKUNIQ WALLET')
+    const fetchData = async () => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        await axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/keranjang/`)
+            .then(response => {
+                setData(response.data.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        await axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`)
+            .then(response => {
+                setUser(response.data.data[0])
+            })
+        await axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/voucher`)
+            .then(response => {
+                setVoucherme(response.data.data)
+            })
+    }
+    console.log(voucherme)
+    useEffect(() => {
+        fetchData()
+    }, [])
+
     const [voucher, setVoucher] = useState('NO VOUCHER')
 
-    console.log(wallet)
-    console.log(voucher)
-
     const walletOptions = [
-        { value: 'GAKUNIQ WALLET', label: 'GAKUNIQ WALLET' },
+        { value: 'gakuniq wallet', label: 'GAKUNIQ WALLET', saldo: user.saldo },
         { value: 'OVO', label: 'OVO' },
         { value: 'GOPAY', label: 'GOPAY' },
         { value: 'DANA', label: 'DANA' },
     ]
 
-    const voucherOptions = [
-        { value: 'NO VOUCHER', label: 'NO VOUCHER', discount: 0 },
-        { value: 'GAKUNIQ10', label: 'GAKUNIQ10', discount: 10 },
-        { value: 'GAKUNIQ20', label: 'GAKUNIQ20', discount: 20 },
-        { value: 'GAKUNIQ30', label: 'GAKUNIQ30', discount: 30 },
-    ]
+    const paramArr = params
+    const filteredData =
+        data?.filter(item => {
+            return paramArr?.includes(item.id.toString())
+        }) || []
 
-    const discount =
-        (voucherOptions.find(item => item.value === voucher).discount / 100) *
-        totalPrice
+    const totalPrice = filteredData.reduce(
+        (acc, item) => item.total_harga + acc,
+        0,
+    )
+    const voucherDiscount = voucherme?.filter(item => {
+        return item.kode_voucher === voucher
+    })
 
+    const totalDiscount = voucherDiscount?.reduce(
+        (acc, item) => item.diskon + acc,
+        0,
+    )
+    const discount = (totalDiscount / 100) * totalPrice
     const total = totalPrice - discount
+
+    const [metode_pembayaran, setMetode_pembayaran] = useState('gakuniq wallet')
+    const [waktu_pemesanan, setWaktu_pemesanan] = useState(
+        new Date().toISOString().slice(0, 19).replace('T', ' '),
+    )
+    const postCheckout = async () => {
+        filteredData.map(item => {
+            axios
+                .post(
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/transaksi/create`,
+                    {
+                        keranjang_id: item.id,
+                        voucher_id: voucherDiscount[0]?.id,
+                        metode_pembayaran: metode_pembayaran,
+                        waktu_pemesanan: waktu_pemesanan,
+                    },
+                )
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        })
+    }
 
     return (
         <AppLayout
@@ -91,13 +131,20 @@ const Checkout = () => {
                     </h2>
                     <span className="text-sm text-slate-800 border-y-[1px] border-slate-700 py-3 my-3 w-full">
                         <h1 className="text-lg font-bold text-slate-800">
-                            Costanza Bendelow{' '}
-                            <span className="text-xs font-normal">(RUMAH)</span>
+                            {user
+                                ? user.nama_depan + ' ' + user.nama_belakang
+                                : ''}
+                            <span className="text-xs font-normal">
+                                {' '}
+                                ({user ? user.label_alamat : ''})
+                            </span>
                         </h1>
-                        <p className="text-sm text-slate-800">0857-1234-5678</p>
                         <p className="text-sm text-slate-800">
-                            Jl. Raya Ciputat No. 123, RT. 001, RW. 001
-                            <br /> Ciputat, Tangerang Selatan, Banten 15412
+                            {user ? user.no_telepon : ''}
+                        </p>
+                        <p className="text-sm text-slate-800">
+                            {user ? user.alamat_lengkap : ''}
+                            <br /> {user ? user.kota_kecamatan : ''},{' '}
                         </p>
                     </span>
                     <div className="flex border-y-2 border-slate-700 py-3 my-3 w-full">
@@ -109,15 +156,30 @@ const Checkout = () => {
                                     </h1>
                                     <select
                                         className="text-sm text-slate-800"
-                                        value={wallet}
+                                        value={metode_pembayaran}
                                         onChange={e =>
-                                            setWallet(e.target.value)
+                                            setMetode_pembayaran(e.target.value)
                                         }>
                                         {walletOptions.map((option, i) => (
                                             <option
                                                 key={i}
-                                                value={option.value}>
-                                                {option.label}
+                                                value={option.value}
+                                                onChange={e =>
+                                                    setMetode_pembayaran(
+                                                        e.target.value,
+                                                    )
+                                                }>
+                                                {option.value}{' '}
+                                                {option.saldo
+                                                    ? '-' +
+                                                      option.saldo
+                                                          .toString()
+                                                          .replace(
+                                                              /(\d)(?=(\d{3})+(?!\d))/g,
+                                                              '$1.',
+                                                          )
+                                                          .concat(' IDR')
+                                                    : ''}
                                             </option>
                                         ))}
                                     </select>
@@ -133,13 +195,19 @@ const Checkout = () => {
                                         onChange={e =>
                                             setVoucher(e.target.value)
                                         }>
-                                        {voucherOptions.map((option, i) => (
-                                            <option
-                                                key={i}
-                                                value={option.value}>
-                                                {option.label}
-                                            </option>
-                                        ))}
+                                        {/* filter berdasarkan harga terendah */}
+                                        {voucherme
+                                            ?.sort(
+                                                (a, b) => a.diskon - b.diskon,
+                                            )
+                                            .map((option, i) => (
+                                                <option
+                                                    key={i}
+                                                    value={option.kode_voucher}>
+                                                    {option.kode_voucher} ({' '}
+                                                    {option.diskon}% )
+                                                </option>
+                                            ))}
                                     </select>
                                 </div>
                             </div>
@@ -152,7 +220,15 @@ const Checkout = () => {
                                         Subtotal Produk
                                     </p>
                                     <p className="text-sm font-normal text-slate-800">
-                                        Rp. {totalPrice}
+                                        Rp.{' '}
+                                        {totalPrice
+                                            ? totalPrice
+                                                  .toString()
+                                                  .replace(
+                                                      /\B(?=(\d{3})+(?!\d))/g,
+                                                      '.',
+                                                  )
+                                            : ''}
                                     </p>
                                 </span>
                                 <span className="flex flex-row justify-between">
@@ -168,7 +244,15 @@ const Checkout = () => {
                                         Subtotal
                                     </p>
                                     <p className="text-lg font-bold text-slate-800">
-                                        Rp. {totalPrice}
+                                        Rp.{' '}
+                                        {totalPrice
+                                            ? totalPrice
+                                                  .toString()
+                                                  .replace(
+                                                      /\B(?=(\d{3})+(?!\d))/g,
+                                                      '.',
+                                                  )
+                                            : ''}
                                     </p>
                                 </span>
                                 <span className="flex flex-row justify-between">
@@ -176,7 +260,7 @@ const Checkout = () => {
                                         Diskon
                                     </p>
                                     <p className="text-sm font-normal text-slate-800">
-                                        Rp.{discount}
+                                        Rp. {discount} ({totalDiscount}%)
                                     </p>
                                 </span>
                                 <span className="flex flex-row justify-between">
@@ -189,7 +273,24 @@ const Checkout = () => {
                                 </span>
                             </div>
                             <span className="flex flex-col  ml-1 mt-auto">
-                                <button className="btn  btn-ghost bg-[#FFC700] text-slate-800 font-bold py-2 px-4 rounded-md">
+                                <button
+                                    onClick={() => {
+                                        if (
+                                            metode_pembayaran ===
+                                            'gakuniq wallet'
+                                        ) {
+                                            if (user.saldo < total) {
+                                                alert(
+                                                    'Saldo GAKUNIQ WALLET anda tidak mencukup',
+                                                )
+                                            } else {
+                                                postCheckout()
+                                            }
+                                        } else {
+                                            postCheckout()
+                                        }
+                                    }}
+                                    className="btn  btn-ghost bg-[#FFC700] text-slate-800 font-bold py-2 px-4 rounded-md">
                                     Checkout
                                 </button>
                                 <span className="my-[1px]"></span>
@@ -200,7 +301,7 @@ const Checkout = () => {
                         </div>
                     </div>
                     <div className="flex flex-row flex-wrap">
-                        {products.map((product, i) => (
+                        {filteredData.map((item, i) => (
                             <span
                                 key={i}
                                 className="bg-slate-800 min-w-[30vw] max-w-[30vw] min-h-[20vh] rounded-sm m-1 flex flex-row items-center justify-start overflow-hidden">
@@ -210,17 +311,14 @@ const Checkout = () => {
                                 />
                                 <div className="flex flex-col mx-1">
                                     <h1 className="text-lg font-bold text-white">
-                                        {product.product_title}
+                                        {item.produk.nama_produk}
                                     </h1>
                                     <p className="text-sm text-white">
-                                        {product.type}, {product.color},{' '}
-                                        {product.size}
+                                        New, {item.ukuran}, {item.warna}
                                     </p>
                                     <p className="text-sm text-white">
-                                        {product.qty} x Rp {product.harga}
-                                    </p>
-                                    <p className="text-sm font-bold text-white">
-                                        Rp {product.qty * product.harga}
+                                        {item.jumlah} x Rp{''}
+                                        {item.total_harga}
                                     </p>
                                 </div>
                             </span>

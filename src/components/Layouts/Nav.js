@@ -9,32 +9,73 @@ import {
     AiOutlineMenu,
 } from 'react-icons/ai'
 import { GiSelfLove } from 'react-icons/gi'
-const Nav = props => {
+import Cookies from 'js-cookie'
+import axios from 'axios'
+
+const Nav = () => {
     const router = useRouter()
+
     const [dataCategory, setDataCategory] = useState(false)
 
-    const openLeave = () => {
-        setDataCategory('')
-    }
+    const listCategory = [
+        {
+            id: 1,
+            name: 'PRIA',
+            link: '/kategori/pria',
+            hover: <HoverCategoryPria />,
+        },
+        {
+            id: 2,
+            name: 'WANITA',
+            link: '/kategori/wanita',
+            hover: <HoverCategoryWanita />,
+        },
+    ]
+    const listMenu = [
+        {
+            id: 1,
+            name: 'AKUN',
+            link: '/akun',
+            icon: <AiOutlineUser className="text-2xl" />,
+        },
+        {
+            id: 2,
+            name: 'KERANJANG',
+            link: '/nav-item/keranjang',
+            icon: <AiOutlineShoppingCart className="text-2xl" />,
+        },
+        {
+            id: 3,
+            name: 'WISHLIST',
+            link: '/nav-item/wishlist',
+            icon: <GiSelfLove className="text-2xl" />,
+        },
+    ]
 
-    // const [data, setData] = useState()
-    // const Get = async () => {
-    //     await axios
-    //         .get('http://192.168.1.16:8000/api/kategori/')
-    //         .then(response => setData(response.data.data))
-    //         .catch(error => {})
-    // }
-    // useEffect(() => {
-    //     Get()
-    // }, [])
+    const [data, setData] = useState()
+
+    const fetchData = async () => {
+        await axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/kategori`)
+            .then(response => {
+                setData(response.data.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+    useEffect(() => {
+        fetchData()
+    }, [])
 
     // console.log(data)
+
     return (
-        <>
+        <div>
             <nav
                 className="bg-white p-0 shadow"
                 onMouseEnter={() => {
-                    openLeave()
+                    setDataCategory('')
                 }}>
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-wrap items-center justify-between px-4 h-[auto] py-[1rem]">
@@ -42,7 +83,7 @@ const Nav = props => {
                             <div
                                 className="flex-shrink-0 flex items-center mr-5"
                                 onMouseEnter={() => {
-                                    openLeave()
+                                    setDataCategory('')
                                 }}>
                                 <NavLink
                                     href={{
@@ -63,55 +104,39 @@ const Nav = props => {
                                 </NavLink>
                             </div>
                             <div className="hidden md:flex flex-row flex-wrap items-center justify-center">
-                                <NavLink
-                                    href={{
-                                        pathname: '/kategori/wanita',
-                                    }}
-                                    active={
-                                        router.pathname === '/kategori/wanita'
-                                    }>
-                                    <span
-                                        onMouseEnter={() => {
-                                            setDataCategory(
-                                                HoverCategoryWanita(),
-                                            )
+                                {data?.map((item, index) => (
+                                    <NavLink
+                                        key={index}
+                                        href={{
+                                            pathname: item.link,
                                         }}
-                                        className="text-[12px] font-extrabold px-1">
-                                        WANITA
-                                    </span>
-                                </NavLink>
-                                <NavLink
-                                    href={{
-                                        pathname: '/kategori/pria',
-                                    }}
-                                    active={
-                                        router.pathname === '/kategori/pria'
-                                    }>
-                                    <span
-                                        onMouseEnter={() => {
-                                            setDataCategory(HoverCategoryPria())
-                                        }}
-                                        className="text-[12px] font-extrabold px-1">
-                                        PRIA
-                                    </span>
-                                </NavLink>
-                                <NavLink
-                                    href={{
-                                        pathname: '/katalog',
-                                    }}
-                                    active={router.pathname === '/katalog'}>
-                                    <span className="text-[12px] font-extrabold px-1">
-                                        SEMUA
-                                    </span>
-                                </NavLink>
+                                        active={router.pathname === item.link}>
+                                        <span
+                                            onMouseEnter={() => {
+                                                if (item.id === 1) {
+                                                    setDataCategory(
+                                                        <HoverCategoryPria />,
+                                                    )
+                                                }
+                                                if (item.id === 2) {
+                                                    setDataCategory(
+                                                        <HoverCategoryWanita />,
+                                                    )
+                                                }
+                                            }}
+                                            className="text-[12px] font-extrabold px-1">
+                                            {item.name}
+                                        </span>
+                                    </NavLink>
+                                ))}
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap items-center">
+                        <div className="flex flex-col md:flex-row items-start">
                             <div className="relative mx-2">
                                 <input
                                     type="search"
-                                    className="bg-transparent rounded-md w-[300px] h-[40px] pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                                    className="bg-transparent mb-2 md:mb-0 rounded-md max-w-[300px] h-[40px] pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                                     placeholder="Cari Produk"
                                 />
                                 <div className="absolute top-1/2 left-3 transform -translate-y-1/2">
@@ -130,49 +155,20 @@ const Nav = props => {
                                     </svg>
                                 </div>
                             </div>
-                            {/* end form search */}
-                            <NavLink
-                                href={{
-                                    pathname: '/akun',
-                                }}
-                                active={
-                                    router.pathname === '/akun' ||
-                                    router.pathname === '/akun/voucher' ||
-                                    router.pathname === '/akun/topup'
-                                }>
-                                <AiOutlineUser className="text-2xl" />
-                            </NavLink>
-
-                            <NavLink
-                                href={{
-                                    pathname: '/nav-item/wishlist',
-                                }}
-                                active={
-                                    router.pathname === '/nav-item/wishlist'
-                                }>
-                                <GiSelfLove className="text-2xl" />
-                            </NavLink>
-                            <NavLink
-                                href={{
-                                    pathname: '/nav-item/keranjang',
-                                }}
-                                active={
-                                    router.pathname === '/nav-item/keranjang'
-                                }>
-                                <span className="indicator">
-                                    <span className="indicator-item text-white font-bold bg-red-500 px-[4px] rounded-xl">
-                                        0
-                                    </span>
-                                    <AiOutlineShoppingCart className="text-2xl" />
-                                </span>
-                            </NavLink>
-                            <NavLink
-                                href={{
-                                    pathname: '/menu',
-                                }}
-                                active={router.pathname === '/menu'}>
-                                <AiOutlineMenu className="text-2xl" />
-                            </NavLink>
+                            <div>
+                                {listMenu.map((item, index) => (
+                                    <NavLink
+                                        key={index}
+                                        href={{
+                                            pathname: item.link,
+                                        }}
+                                        active={router.pathname === item.link}>
+                                        <span className="text-[12px] font-extrabold px-1">
+                                            {item.icon}
+                                        </span>
+                                    </NavLink>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -185,7 +181,7 @@ const Nav = props => {
                 }}>
                 {dataCategory}
             </div>
-        </>
+        </div>
     )
 }
 

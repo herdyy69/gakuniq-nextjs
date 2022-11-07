@@ -1,14 +1,59 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
 import Head from 'next/head'
 import Link from 'next/link'
 import { BsTrash } from 'react-icons/bs'
-
+import Guest from '@/components/Layouts/Guest'
+import Cookies from 'js-cookie'
+import axios from 'axios'
 const Wishlist = () => {
     const router = useRouter()
+    const token = Cookies.get('token')
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-    var onDiscount = true
+    const [data, setData] = useState()
+    const [dataProduk, setDataProduk] = useState()
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
+    const [showAlert, setshowAlert] = useState(false)
+
+    useEffect(() => {
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/wishlist`)
+            .then(res => {
+                setData(res.data.data)
+                setLoading(false)
+            })
+            .catch(err => {
+                setError(true)
+                setLoading(false)
+            })
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/produk`)
+            .then(res => {
+                setDataProduk(res.data.data)
+                setLoading(false)
+            })
+            .catch(err => {
+                setError(true)
+                setLoading(false)
+            })
+    }, [])
+
+    const deleteWishlist = async id => {
+        await axios
+            .delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/wishlist/${id}`)
+            .then(res => {
+                console.log(res)
+                setshowAlert('success delete wishlist')
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    var onDiscount = false
 
     const DummyData = [
         {
@@ -42,105 +87,104 @@ const Wishlist = () => {
             headerX="TRUE"
             header={
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800">
+                    <h1 className="text-lg text-slate-800 font-bold">
                         Wishlist
                     </h1>
                 </div>
             }>
-            <div className="mx-auto my-[2rem] max-w-[80vw]">
-                <div className="flex flex-col md:flex-row">
-                    <div className="flex flex-col">
-                        <div className="inline-flex flex-row items-center justify-between min-w-[50vw] border-b-4 rounded-lg">
-                            <span className="text-sm font-bold text-slate-800">
-                                <label className="inline-flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-md"
-                                    />
-                                    <span className="ml-2 opacity-[0.7]">
-                                        Pilih Semua
-                                    </span>
-                                </label>
-                            </span>
-                            <span className="text-sm font-bold text-slate-800">
-                                <label className="inline-flex items-center">
-                                    <Link
-                                        href={{
-                                            pathname: '',
-                                        }}>
-                                        <a className="ml-2 text-red-700 opacity-[0.9]">
-                                            Hapus Semua
-                                        </a>
-                                    </Link>
-                                </label>
-                            </span>
-                        </div>
-                        <div className="inline-flex flex-col items-center justify-center min-w-[80vw] min-h-[30vh]">
-                            {DummyData.map(item => (
-                                <div className="flex items-center justify-between w-full h-full p-4 mt-2 bg-slate-200 rounded-lg hover:bg-slate-500">
-                                    <div className="flex flex-row">
-                                        <span className="text-sm font-bold text-slate-800 my-auto mr-2">
-                                            <label className="flex">
-                                                <input
-                                                    type="checkbox"
-                                                    className="checkbox checkbox-md"
-                                                />
-                                            </label>
-                                        </span>
-                                        <div className="flex flex-row items-center justify-center mx-auto">
-                                            <img
-                                                src="https://i.ibb.co/0nQqZ1t/Rectangle-1.png"
-                                                alt="Rectangle-1"
-                                                border="0"
-                                                className="max-w-[90px] max-h-[90px] rounded-lg"
-                                            />
-                                            <span className="all-describe mx-2 flex-1">
-                                                <p className="text-lg font-bold text-slate-800">
-                                                    Kemeja Pria
-                                                </p>
-                                                {/* <p className="text-xs font-normal text-slate-800">
-                                                    New, Blue, M
-                                                </p>
-                                                <p className="text-xs font-normal text-slate-800">
-                                                    1 x Rp 200.000
-                                                </p> */}
-                                                <p className="text-sm font-bold text-slate-800 mt-2">
-                                                    {onDiscount === true ? (
-                                                        <>
-                                                            <span className="bg-red-800 rounded-md px-2 py-1 text-white text-xs">
-                                                                90% OFF
-                                                            </span>
-                                                            <span className="mx-2 line-through text-xs text-slate-800">
-                                                                Rp 200.000
-                                                            </span>
-                                                            <span className=" text-slate-800">
-                                                                Rp 20.000
-                                                            </span>
-                                                        </>
-                                                    ) : (
-                                                        <span className=" text-slate-800">
-                                                            Rp 20.000
-                                                        </span>
-                                                    )}
-                                                </p>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <span className="trash-icon text-2xl text-slate-800 flex-none gap-2">
+            {token ? (
+                <div className="mx-auto my-[2rem] max-w-[80vw]">
+                    <div className="flex flex-col md:flex-row">
+                        <div className="flex flex-col">
+                            <div className="inline-flex flex-row items-center justify-start min-w-[50vw] border-b-4 rounded-lg">
+                                <span className="text-sm font-bold text-slate-800">
+                                    <label className="inline-flex items-center">
                                         <Link
                                             href={{
                                                 pathname: '',
                                             }}>
-                                            <a className="text-2xl text-red-700 opacity-[0.9] btn btn-ghost">
-                                                <BsTrash size={20} />
+                                            <a className="ml-2 text-red-700 opacity-[0.9]">
+                                                Hapus Semua
                                             </a>
                                         </Link>
-                                    </span>
-                                </div>
-                            ))}
+                                    </label>
+                                </span>
+                            </div>
+                            <div className="inline-flex flex-col items-center justify-center min-w-[80vw] min-h-[30vh]">
+                                {data?.map(item => (
+                                    <div className="flex items-center justify-between w-full h-full p-4 mt-2 bg-slate-200 rounded-lg hover:bg-slate-500">
+                                        <div className="flex flex-row">
+                                            <div className="flex flex-row items-center justify-center mx-auto">
+                                                <img
+                                                    src="https://i.ibb.co/0nQqZ1t/Rectangle-1.png"
+                                                    alt="Rectangle-1"
+                                                    border="0"
+                                                    className="max-w-[90px] max-h-[90px] rounded-lg"
+                                                />
+                                                <span className="all-describe mx-2 flex-1">
+                                                    <p className="text-lg font-bold text-slate-800">
+                                                        {
+                                                            dataProduk?.find(
+                                                                produk =>
+                                                                    produk.id ===
+                                                                    item.produk_id,
+                                                            )?.nama_produk
+                                                        }
+                                                    </p>
+
+                                                    <p className="text-xs font-normal text-slate-800">
+                                                        {
+                                                            dataProduk?.find(
+                                                                produk =>
+                                                                    produk.id ===
+                                                                    item.produk_id,
+                                                            )?.deskripsi
+                                                        }
+                                                    </p>
+                                                    <p className="text-sm font-bold text-slate-800 mt-2">
+                                                        {onDiscount === true ? (
+                                                            <>
+                                                                <span className="bg-red-800 rounded-md px-2 py-1 text-white text-xs">
+                                                                    90% OFF
+                                                                </span>
+                                                                <span className="mx-2 line-through text-xs text-slate-800">
+                                                                    Rp 200.000
+                                                                </span>
+                                                                <span className=" text-slate-800">
+                                                                    Rp 20.000
+                                                                </span>
+                                                            </>
+                                                        ) : (
+                                                            <span className=" text-slate-800">
+                                                                Rp{' '}
+                                                                {
+                                                                    dataProduk?.find(
+                                                                        produk =>
+                                                                            produk.id ===
+                                                                            item.produk_id,
+                                                                    )?.harga
+                                                                }
+                                                            </span>
+                                                        )}
+                                                    </p>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span className="trash-icon text-2xl text-slate-800 flex-none gap-2">
+                                            <a
+                                                onClick={() =>
+                                                    deleteWishlist(item.id)
+                                                }
+                                                className="text-2xl text-red-700
+                                                opacity-[0.9] btn btn-ghost">
+                                                <BsTrash size={20} />
+                                            </a>
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                    {/* <div className="flex flex-col w-full mt-4 md:mt-0 md:ml-4">
+                        {/* <div className="flex flex-col w-full mt-4 md:mt-0 md:ml-4">
                         <div className="flex flex-col w-full h-auto p-4 bg-slate-200 rounded-lg">
                             <div className="flex flex-col w-full h-full">
                                 <h1 className="text-2xl font-bold text-slate-800 mb-2">
@@ -184,8 +228,11 @@ const Wishlist = () => {
                             </div>
                         </div>
                     </div> */}
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <Guest />
+            )}
 
             <Head>
                 <title>GakUniq - Wislist..</title>

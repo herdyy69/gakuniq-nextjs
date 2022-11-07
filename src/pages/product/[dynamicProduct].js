@@ -1,35 +1,73 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
 import Head from 'next/head'
 import Link from 'next/link'
+import axios from 'axios'
+import Cookies from 'js-cookie'
 import { BsTrash } from 'react-icons/bs'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
-
-// Import Swiper styles
+import { Parallax, Pagination, Navigation } from 'swiper'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
-// import required modules
-import { Parallax, Pagination, Navigation } from 'swiper'
-
 const DetailProduct = () => {
     const router = useRouter()
+    const token = Cookies.get('token')
 
-    var onDiscount = true
+    const [data, setData] = useState()
+    const [dataSub, setDataSub] = useState()
+    const [params, setParams] = useState(router.query.id)
+    const [showAlert, setshowAlert] = useState(false)
 
-    const DummyData = [
-        {
-            id: 1,
-        },
-        {
-            id: 2,
-        },
-    ]
+    const [qty, setQty] = useState(1)
+    const [warna, setWarna] = useState()
+    const [ukuran, setUkuran] = useState('s')
 
-    const warna = [
+    const addToCart = async () => {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        await axios
+            .post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/keranjang/create`,
+                {
+                    produk_id: params,
+                    jumlah: qty,
+                    warna: warna,
+                    ukuran: ukuran,
+                },
+            )
+            .then(res => {
+                console.log(res)
+                setshowAlert('success add to cart')
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        addToCart()
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/produk/${params}`)
+            .then(res => {
+                setData(res.data.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sub_kategori`)
+            .then(response => {
+                setDataSub(response.data.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
+
+    const warnas = [
         {
             id: 1,
             warna: '#525252',
@@ -68,6 +106,12 @@ const DetailProduct = () => {
         },
     ]
 
+    const stok = data?.stok
+    const stokArray = []
+    for (let i = 1; i <= stok; i++) {
+        stokArray.push(i)
+    }
+    console.log(stokArray)
     return (
         <AppLayout
             subTitle={
@@ -103,6 +147,20 @@ const DetailProduct = () => {
                 </div>
             }>
             <div className="mx-auto my-[2rem] max-w-[80rem]">
+                {showAlert && (
+                    <div className="toast toast-start z-[999]">
+                        <div className={'alert alert-success'}>
+                            <div className="flex flex-row">
+                                <span>{showAlert}</span>
+                                <button
+                                    className="bg-transparent text-2xl font-semibold leading-none outline-none focus:outline-none"
+                                    onClick={() => setshowAlert(false)}>
+                                    <span>×</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className="flex flex-col items-center">
                     <div className="flex flex-col md:flex-row">
                         <div className="flex flex-col justify-around">
@@ -180,13 +238,13 @@ const DetailProduct = () => {
                             <div className="flex flex-col w-full h-auto p-4 bg-slate-200 rounded-lg">
                                 <div className="flex flex-col w-full h-full">
                                     <h1 className="text-4xl font-bold text-slate-800 mb-2">
-                                        Sweater Extra Fine Merino Kerah Bulat{' '}
+                                        {data?.nama_produk}{' '}
                                         <span className="text-sm opacity-[0.5]">
                                             New Limited Store
                                         </span>
                                         <br />
                                         <span className="text-2xl">
-                                            Rp 999.999
+                                            Rp {data?.harga}
                                         </span>
                                     </h1>
                                     <span className="flex flex-row items-center justify-between mt-2">
@@ -198,7 +256,7 @@ const DetailProduct = () => {
                                             WARNA
                                         </span>
                                         <div className="flex flex-row">
-                                            {warna.map(data => (
+                                            {warnas.map(data => (
                                                 <label
                                                     className="custom-radio"
                                                     key={data.id}>
@@ -206,6 +264,11 @@ const DetailProduct = () => {
                                                         type="radio"
                                                         name="radio-warna"
                                                         value={data.warna}
+                                                        onChange={e =>
+                                                            setWarna(
+                                                                e.target.value,
+                                                            )
+                                                        }
                                                     />
                                                     <span
                                                         className="radio-btn"
@@ -231,6 +294,11 @@ const DetailProduct = () => {
                                                         type="radio"
                                                         name="radio-ukuran"
                                                         value={data.size}
+                                                        onChange={e =>
+                                                            setUkuran(
+                                                                e.target.value,
+                                                            )
+                                                        }
                                                     />
                                                     <span className="radio-btn">
                                                         <h3>{data.size}</h3>
@@ -248,22 +316,42 @@ const DetailProduct = () => {
                                             {/* SELECT OPTION */}
                                             <select
                                                 className="select-css w-[16rem] rounded-md"
-                                                name="jumlah"
-                                                id="jumlah">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
+                                                value={qty}
+                                                onChange={e =>
+                                                    setQty(e.target.value)
+                                                }>
+                                                {stokArray.length > 0 ? (
+                                                    stokArray.map(data => (
+                                                        <option
+                                                            key={data}
+                                                            value={data}>
+                                                            {data
+                                                                ? data
+                                                                : 'STOK KOSONG'}
+                                                        </option>
+                                                    ))
+                                                ) : (
+                                                    <option value="STOK KOSONG">
+                                                        STOK KOSONG
+                                                    </option>
+                                                )}
                                             </select>
                                         </div>
                                     </div>
                                     <span className="flex flex-row items-center justify-start mt-4">
-                                        <Link
-                                            href={{
-                                                pathname: '/checkout',
-                                            }}>
-                                            <button className="btn w-auto py-2 mx-1 text-lg font-bold text-white bg-slate-800 hover:bg-green-800 rounded-lg">
-                                                TAMBAHKAN KE KERANJANG
-                                            </button>
-                                        </Link>
+                                        <button
+                                            onClick={() => {
+                                                token
+                                                    ? stokArray.length > 0
+                                                        ? addToCart()
+                                                        : alert('Stok Kosong')
+                                                    : alert(
+                                                          'Silahkan Login Terlebih Dahulu',
+                                                      )
+                                            }}
+                                            className="btn w-auto py-2 mx-1 text-lg font-bold text-white bg-slate-800 hover:bg-green-800 rounded-lg">
+                                            TAMBAHKAN KE KERANJANG
+                                        </button>
                                         <button className="btn w-auto py-2 mx-1 text-lg font-bold text-slate-800 bg-slate-200 rounded-lg glass">
                                             Lanjutkan Belanja
                                         </button>
@@ -302,10 +390,6 @@ const DetailProduct = () => {
                     </div>
                 </div>
             </div>
-
-            <Head>
-                <title>GakUniq - Keranjang..</title>
-            </Head>
         </AppLayout>
     )
 }

@@ -23,11 +23,15 @@ const Login = () => {
         console.log(formData)
 
         await axios
-            .post(`http://127.0.0.1:8000/api/login`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
+            .post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            })
+            )
             .then(response => {
                 Cookies.set('token', response.data.token)
                 Router.push('/akun')
@@ -66,7 +70,7 @@ const Login = () => {
 
     const [nama_depan, setNamaDepan] = useState('')
     const [nama_belakang, setNamaBelakang] = useState('')
-    const [nomer_telepon, setNomerTelepon] = useState('')
+    const [no_telepon, setNomerTelepon] = useState('')
     const [username_daftar, setUsernameDaftar] = useState('')
     const [email_daftar, setEmailDaftar] = useState('')
     const [password_daftar, setPasswordDaftar] = useState('')
@@ -92,7 +96,7 @@ const Login = () => {
         const allValue = new FormData()
         allValue.append('nama_depan', nama_depan)
         allValue.append('nama_belakang', nama_belakang)
-        allValue.append('nomer_telepon', nomer_telepon)
+        allValue.append('no_telepon', no_telepon)
         allValue.append('username', username_daftar)
         allValue.append('email', email_daftar)
         allValue.append('password', password_daftar)
@@ -107,11 +111,15 @@ const Login = () => {
         console.log(allValue)
 
         await axios
-            .post(`http://127.0.0.1:8000/api/register`, allValue, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
+            .post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register`,
+                allValue,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 },
-            })
+            )
             .then(response => {
                 console.log(response)
                 setTimeout(() => {
@@ -306,7 +314,7 @@ const Login = () => {
                                     <input
                                         required
                                         type="number"
-                                        value={nomer_telepon}
+                                        value={no_telepon}
                                         onChange={e =>
                                             setNomerTelepon(e.target.value)
                                         }
