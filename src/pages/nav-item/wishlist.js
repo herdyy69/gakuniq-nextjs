@@ -112,7 +112,9 @@ const Wishlist = () => {
                             </div>
                             <div className="inline-flex flex-col items-center justify-center min-w-[80vw] min-h-[30vh]">
                                 {data?.map(item => (
-                                    <div className="flex items-center justify-between w-full h-full p-4 mt-2 bg-slate-200 rounded-lg hover:bg-slate-500">
+                                    <div
+                                        key={item.id}
+                                        className="flex items-center justify-between w-full h-full p-4 mt-2 bg-slate-200 rounded-lg hover:bg-slate-500">
                                         <div className="flex flex-row">
                                             <div className="flex flex-row items-center justify-center mx-auto">
                                                 <img

@@ -1,101 +1,64 @@
 import NavLink from '@/components/NavLink'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
 import Head from 'next/head'
 import Link from 'next/link'
-import Image from 'next/image'
-import Select from 'react-select'
+import Cookies from 'js-cookie'
+import axios from 'axios'
 
 const Checkout = props => {
     const router = useRouter()
+    const token = Cookies.get('token')
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-    const data = [
-        {
-            id: 1,
-            product_title: 'Costanza Bendelow',
-            harga: 10000,
-            qty: 1,
-            color: 'Goldenrod',
-            size: 'M',
-            type: 'BFZ',
-            image: 'http://dummyimage.com/82x92.png/5fa2dd/ffffff',
-        },
-        {
-            id: 2,
-            product_title: 'Costanza Bendelow',
-            harga: 10000,
-            qty: 1,
-            color: 'Goldenrod',
-            size: 'M',
-            type: 'BFZ',
-            image: 'http://dummyimage.com/82x92.png/5fa2dd/ffffff',
-        },
-    ]
+    const [params, setParams] = useState(router.query.id)
+    const [voucher, setVoucher] = useState([])
+    const [user, setUser] = useState({})
+    const [loading, setLoading] = useState(true)
 
-    // var onCart = data.length
+    useEffect(() => {
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/voucher/${params}`)
+            .then(res => {
+                setVoucher(res.data.data)
+                setLoading(false)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`)
+            .then(response => {
+                setUser(response.data.data[0])
+            })
+    }, [])
 
-    // const [value, setValue] = useState('GAKUNIQ WALLET')
-    // const [voucher, setVoucher] = useState('NO VOUCHER')
-
-    // const voucherOptions = [
-    //     { value: 'NO VOUCHER', label: 'NO VOUCHER', discount: 0 },
-    //     { value: 'GAKUNIQ10', label: 'GAKUNIQ10', discount: 10 },
-    //     { value: 'GAKUNIQ20', label: 'GAKUNIQ20', discount: 20 },
-    //     { value: 'GAKUNIQ30', label: 'GAKUNIQ30', discount: 30 },
-    // ]
-
-    // const totalQty = data.reduce((acc, item) => {
-    //     return acc + item.qty
-    // }, 0)
-    // const totalHarga = data.reduce((acc, item) => {
-    //     return acc + item.harga * item.qty
-    // }, 0)
-    // const ppn = (10 / 100) * totalHarga
-    // const totalHargaPpn = totalHarga - ppn
-
-    // const discount =
-    //     (voucherOptions.find(x => x.value === voucher).discount / 100) *
-    //     totalHargaPpn
-
-    // const discountX = voucherOptions.find(x => x.value === voucher).discount
-
-    // const allPrice = totalHargaPpn - discount
-
-    // console.log(value)
-    // console.log(voucher)
-
-    // const [allValue, setAllValue] = useState()
-
-    // const allData = {
-    //     value,
-    //     voucher,
-    //     totalQty,
-    //     totalHarga,
-    //     ppn,
-    //     totalHargaPpn,
-    //     discount,
-    //     discountX,
-    //     allPrice,
-    // }
-
-    // const handleCheckout = () => {
-    //     router.push({
-    //         pathname: '/checkout/confirm',
-    //         query: allData,
-    //     })
-    // }
-
-    const [wallet, setWallet] = useState('GAKUNIQ WALLET')
-
-    console.log(wallet)
+    const [metode_pembayaran, setMetode_pembayaran] = useState('gakuniq wallet')
 
     const walletOptions = [
-        { value: 'GAKUNIQ WALLET', label: 'GAKUNIQ WALLET' },
+        { value: 'gakuniq wallet', label: 'GAKUNIQ WALLET', saldo: user.saldo },
         { value: 'OVO', label: 'OVO' },
         { value: 'GOPAY', label: 'GOPAY' },
         { value: 'DANA', label: 'DANA' },
     ]
+
+    const checkout = () => {
+        axios
+            .post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/voucher_user/create`,
+                {
+                    metode_pembayaran: metode_pembayaran,
+                    voucher_id: voucher.id,
+                },
+            )
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
 
     return (
         <AppLayout
@@ -137,7 +100,7 @@ const Checkout = props => {
                                     Nama Voucher
                                 </p>
                                 <p className="text-sm font-normal text-slate-800">
-                                    gpt2033
+                                    {voucher.kode_voucher}
                                 </p>
                             </span>
                             <span className="flex flex-row justify-between">
@@ -145,7 +108,7 @@ const Checkout = props => {
                                     Harga Voucher
                                 </p>
                                 <p className="text-sm font-normal text-slate-800">
-                                    Rp. 999
+                                    Rp. {voucher.harga}
                                 </p>
                             </span>
 
@@ -154,29 +117,70 @@ const Checkout = props => {
                                     Total
                                 </p>
                                 <p className="text-lg font-bold text-slate-800">
-                                    Rp. 9999
+                                    Rp. {voucher.harga}
                                 </p>
                             </span>
                         </div>
-                        <div className="flex flex-col min-w-[30vw] max-w-[30vw] my-3">
-                            <div className="flex flex-row justify-between">
-                                <h1 className="text-lg font-bold text-slate-800">
+                        <div className="flex flex-col min-w-[30vw] max-w-[auto] my-3">
+                            <div className="flex flex-row items-center justify-between">
+                                <h1 className="text-lg font-bold text-slate-800 mr-3">
                                     Metode Pembayaran
                                 </h1>
                                 <select
                                     className="text-sm text-slate-800"
-                                    value={wallet}
-                                    onChange={e => setWallet(e.target.value)}>
+                                    value={metode_pembayaran}
+                                    onChange={e =>
+                                        setMetode_pembayaran(e.target.value)
+                                    }>
                                     {walletOptions.map((option, i) => (
-                                        <option key={i} value={option.value}>
-                                            {option.label}
+                                        <option
+                                            key={i}
+                                            value={option.value}
+                                            onChange={e =>
+                                                setMetode_pembayaran(
+                                                    e.target.value,
+                                                )
+                                            }>
+                                            {option.value}{' '}
+                                            {option.saldo
+                                                ? '- ' +
+                                                  option.saldo
+                                                      .toString()
+                                                      .replace(
+                                                          /(\d)(?=(\d{3})+(?!\d))/g,
+                                                          '$1.',
+                                                      )
+                                                      .concat(' IDR')
+                                                : ''}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                         </div>
                         <span className="flex flex-row  ml-1 mt-auto">
-                            <button className="btn  btn-ghost bg-[#FFC700] text-slate-800 font-bold py-2 px-4 rounded-md">
+                            <button
+                                onClick={e => {
+                                    if (
+                                        metode_pembayaran === 'gakuniq wallet'
+                                    ) {
+                                        if (user.saldo < voucher.harga) {
+                                            alert(
+                                                'Saldo GAKUNIQ WALLET anda tidak mencukup',
+                                            )
+                                        } else {
+                                            checkout() && e.preventDefault()
+                                            router.push({
+                                                pathname: '/akun/voucher',
+                                            })
+                                        }
+                                    } else {
+                                        checkout() && e.preventDefault()
+                                        router.push({
+                                            pathname: '/akun/voucher',
+                                        })
+                                    }
+                                }}
+                                className="btn  btn-ghost bg-[#FFC700] text-slate-800 font-bold py-2 px-4 rounded-md">
                                 Checkout
                             </button>
                             <span className="mx-[1px]"></span>
