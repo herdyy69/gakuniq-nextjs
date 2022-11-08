@@ -12,6 +12,7 @@ const Checkout = () => {
     const [data, setData] = useState()
     const [user, setUser] = useState({})
     const [voucherme, setVoucherme] = useState()
+    const [showAlert, setshowAlert] = useState(false)
 
     const [params, setParams] = useState(router.query.id)
 
@@ -88,7 +89,13 @@ const Checkout = () => {
                     },
                 )
                 .then(response => {
-                    console.log(response)
+                    // console.log(response)
+                    setshowAlert(
+                        'Transaksi Berhasil, Silahkan Cek Riwayat Transaksi',
+                    )
+                    setTimeout(() => {
+                        router.push('/akun/history')
+                    }, 2000)
                 })
                 .catch(error => {
                     console.log(error)
@@ -125,6 +132,20 @@ const Checkout = () => {
                 </div>
             }>
             <div className="mx-auto my-[2rem] max-w-[80rem]">
+                {showAlert && (
+                    <div className="toast toast-start z-[999]">
+                        <div className={'alert alert-success'}>
+                            <div className="flex flex-row">
+                                <span>{showAlert}</span>
+                                <button
+                                    className="bg-transparent text-2xl font-semibold leading-none outline-none focus:outline-none"
+                                    onClick={() => setshowAlert(false)}>
+                                    <span>×</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className="flex flex-col items-start">
                     <h2 className="text-xl font-bold text-slate-800">
                         Alamat Pengiriman

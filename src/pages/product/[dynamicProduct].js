@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import AppLayout from '@/components/Layouts/AppLayout'
-import Head from 'next/head'
 import Link from 'next/link'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { BsTrash } from 'react-icons/bs'
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Parallax, Pagination, Navigation } from 'swiper'
@@ -65,7 +64,18 @@ const DetailProduct = () => {
             .catch(error => {
                 console.log(error)
             })
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/review_produk`)
+            .then(res => {
+                setUlasan(res.data.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }, [])
+
+    const [ulasan, setUlasan] = useState()
+    console.log(ulasan)
 
     const warnas = [
         {
@@ -111,7 +121,7 @@ const DetailProduct = () => {
     for (let i = 1; i <= stok; i++) {
         stokArray.push(i)
     }
-    console.log(stokArray)
+    console.log(qty)
     return (
         <AppLayout
             subTitle={
@@ -142,7 +152,7 @@ const DetailProduct = () => {
                         <li>
                             <a>Product</a>
                         </li>
-                        <li>Title Product</li>
+                        <li>{data?.nama_produk}</li>
                     </ul>
                 </div>
             }>
@@ -182,8 +192,12 @@ const DetailProduct = () => {
                                         slot="container-start"
                                         className="parallax-bg"
                                         style={{
-                                            'background-image':
-                                                'url(https://image.uniqlo.com/UQ/ST3/id/imagesgoods/450535/sub/idgoods_450535_sub28.jpg?width=1600&impolicy=quality_75)',
+                                            'background-image': `url(${
+                                                process.env
+                                                    .NEXT_PUBLIC_BACKEND_URL +
+                                                '/' +
+                                                data?.gambar_produk1
+                                            })`,
                                         }}
                                         data-swiper-parallax="-23%"></div>
                                     <SwiperSlide>
@@ -191,12 +205,22 @@ const DetailProduct = () => {
                                             className="mx-2 flex flex-col"
                                             data-swiper-parallax="-200">
                                             <img
-                                                src="https://image.uniqlo.com/UQ/ST3/id/imagesgoods/450535/item/idgoods_18_450535.jpg?width=1600&impolicy=quality_75"
+                                                src={
+                                                    process.env
+                                                        .NEXT_PUBLIC_BACKEND_URL +
+                                                    '/' +
+                                                    data?.gambar_produk3
+                                                }
                                                 alt=""
                                                 className="max-w-[150px] h-auto object-cover my-1"
                                             />
                                             <img
-                                                src="https://image.uniqlo.com/UQ/ST3/id/imagesgoods/450535/item/idgoods_18_450535.jpg?width=1600&impolicy=quality_75"
+                                                src={
+                                                    process.env
+                                                        .NEXT_PUBLIC_BACKEND_URL +
+                                                    '/' +
+                                                    data?.gambar_produk3
+                                                }
                                                 alt=""
                                                 className="max-w-[150px] h-auto object-cover my-1"
                                             />
@@ -205,7 +229,12 @@ const DetailProduct = () => {
                                             className="img"
                                             data-swiper-parallax="-100">
                                             <img
-                                                src="https://image.uniqlo.com/UQ/ST3/id/imagesgoods/450535/item/idgoods_18_450535.jpg?width=1600&impolicy=quality_75"
+                                                src={
+                                                    process.env
+                                                        .NEXT_PUBLIC_BACKEND_URL +
+                                                    '/' +
+                                                    data?.gambar_produk2
+                                                }
                                                 alt=""
                                                 className="max-w-[400px] h-full object-cover"
                                             />
@@ -213,16 +242,19 @@ const DetailProduct = () => {
                                     </SwiperSlide>
                                     <SwiperSlide>
                                         <div
-                                            className="describe bg-slate-100 hover:bg-slate-200 max-w-[40vw] max-h-[60vh] flex flex-col items-start px-3 py-5 rounded-md shadow-md opacity-[1]"
+                                            className="describe bg-slate-100 hover:bg-slate-200 flex flex-col items-start px-3 py-5 rounded-md shadow-md opacity-[1]"
                                             data-swiper-parallax="-100">
-                                            <h1 className="text-lg font-bold opacity-[1]">
-                                                Sweater Pria dengan 100% tekstur
-                                                mewah wol premium. Diperbarui
-                                                dengan permukaan yang lebih
-                                                lembut.
-                                            </h1>
+                                            <p className="font-bold opacity-[1]">
+                                                {data?.deskripsi}
+                                            </p>
                                             <span className="detail text-sm font-bold">
-                                                Kode Produk 450535
+                                                {
+                                                    dataSub?.find(
+                                                        x =>
+                                                            x.id ===
+                                                            data?.sub_kategori_id,
+                                                    )?.sub_kategori
+                                                }
                                             </span>
                                         </div>
                                     </SwiperSlide>
@@ -312,9 +344,43 @@ const DetailProduct = () => {
                                         <span className="text-lg font-bold">
                                             JUMLAH
                                         </span>
-                                        <div className="flex flex-row">
+                                        <div className="flex flex-row no-wrap">
+                                            <button
+                                                onClick={() => {
+                                                    if (qty <= 1) {
+                                                        setQty(1)
+                                                    } else {
+                                                        setQty(qty - 1)
+                                                    }
+                                                }}
+                                                className="btn btn-square btn-ghost glass">
+                                                <AiOutlineMinus />
+                                            </button>
+                                            <input
+                                                type="text"
+                                                className="min-w-[90px] h-[50px] text-center mx-1 rounded-lg"
+                                                value={
+                                                    data?.stok > 0
+                                                        ? qty
+                                                        : 'stok habis'
+                                                }
+                                                onChange={e =>
+                                                    setQty(e.target.value)
+                                                }
+                                            />
+                                            <button
+                                                onClick={() => {
+                                                    if (qty >= data?.stok) {
+                                                        setQty(data?.stok)
+                                                    } else {
+                                                        setQty(qty + 1)
+                                                    }
+                                                }}
+                                                className="btn btn-square btn-ghost glass">
+                                                <AiOutlinePlus />
+                                            </button>
                                             {/* SELECT OPTION */}
-                                            <select
+                                            {/* <select
                                                 className="select-css w-[16rem] rounded-md"
                                                 value={qty}
                                                 onChange={e =>
@@ -335,16 +401,16 @@ const DetailProduct = () => {
                                                         STOK KOSONG
                                                     </option>
                                                 )}
-                                            </select>
+                                            </select> */}
                                         </div>
                                     </div>
                                     <span className="flex flex-row items-center justify-start mt-4">
                                         <button
                                             onClick={() => {
                                                 token
-                                                    ? stokArray.length > 0
+                                                    ? data?.stok > 0
                                                         ? addToCart()
-                                                        : alert('Stok Kosong')
+                                                        : alert('Stok Habis')
                                                     : alert(
                                                           'Silahkan Login Terlebih Dahulu',
                                                       )

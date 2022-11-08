@@ -61,6 +61,8 @@ const Katalog = () => {
             })
     }, [])
 
+    console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
+
     return (
         <AppLayout
             subTitle={
@@ -110,7 +112,12 @@ const Katalog = () => {
                             <div className="inline-flex flex-col p-3">
                                 <div className="flex fle-row items-center justify-center">
                                     <img
-                                        src="/logo.png"
+                                        src={
+                                            process.env
+                                                .NEXT_PUBLIC_BACKEND_URL +
+                                            '/' +
+                                            item.gambar_produk1
+                                        }
                                         alt="logo"
                                         className="min-w-[190px] max-w-[190px] min-h-[150px] max-h-[150px] object-cover rounded-md"
                                     />

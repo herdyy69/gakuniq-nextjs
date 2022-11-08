@@ -242,7 +242,11 @@ const Keranjang = () => {
                                         Total Harga
                                     </p>
                                     <p className="text-lg font-bold text-slate-800">
-                                        Rp 20.000
+                                        Rp{' '}
+                                        {total.reduce(
+                                            (a, b) => parseInt(a) + parseInt(b),
+                                            0,
+                                        )}
                                     </p>
                                 </div>
                                 <span className="flex flex-col items-center justify-between mt-2">
