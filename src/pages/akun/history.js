@@ -160,10 +160,31 @@ const History = () => {
                                                                     },
                                                                 )
                                                                 .then(res => {
-                                                                    router.push(
-                                                                        '/akun/history',
-                                                                    )
-                                                                    router.reload()
+                                                                    axios
+                                                                        .post(
+                                                                            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/refund_produk/create/${item.id}`,
+                                                                            {
+                                                                                alasan:
+                                                                                    'Tidak sesuai',
+                                                                                transaksi_id:
+                                                                                    item.id,
+                                                                            },
+                                                                        )
+                                                                        .then(
+                                                                            res => {
+                                                                                router.push(
+                                                                                    '/akun/history',
+                                                                                )
+                                                                                router.reload()
+                                                                            },
+                                                                        )
+                                                                        .catch(
+                                                                            err => {
+                                                                                console.log(
+                                                                                    err,
+                                                                                )
+                                                                            },
+                                                                        )
                                                                 })
                                                                 .catch(err => {
                                                                     console.log(

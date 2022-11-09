@@ -108,7 +108,9 @@ const Katalog = () => {
                 )}
                 <div className="flex flex-row flex-wrap justify-center">
                     {data?.map(item => (
-                        <div className="min-w-[15rem] max-w-[30rem] min-h-[40vh] rounded-lg overflow-hidden shadow-lg flex flex-col border-[3px] glass z-10 m-1">
+                        <div
+                            key={item.id}
+                            className="min-w-[15rem] max-w-[30rem] min-h-[40vh] rounded-lg overflow-hidden shadow-lg flex flex-col border-[3px] glass z-10 m-1">
                             <div className="inline-flex flex-col p-3">
                                 <div className="flex fle-row items-center justify-center">
                                     <img
@@ -175,16 +177,25 @@ const Katalog = () => {
                                         Detail
                                     </button>
                                     <button
-                                        onClick={() =>
-                                            // jika barang sudah ada di wishlist maka tidak bisa di tambahkan lagi ke wishlist
-                                            dataWishlist?.find(
-                                                x => x.produk_id === item.id,
-                                            )
-                                                ? setshowAlert(
-                                                      'Produk sudah ada di wishlist',
-                                                  )
-                                                : addToWishlist(item.id)
-                                        }
+                                        onClick={() => {
+                                            if (token) {
+                                                dataWishlist?.find(
+                                                    x =>
+                                                        x.produk_id === item.id,
+                                                )
+                                                    ? setshowAlert(
+                                                          'Produk sudah ada di wishlist',
+                                                      )
+                                                    : addToWishlist(item.id)
+                                            } else {
+                                                setshowAlert(
+                                                    'Silahkan login terlebih dahulu',
+                                                )
+                                                setTimeout(() => {
+                                                    router.push('/login')
+                                                }, 2000)
+                                            }
+                                        }}
                                         className="bg-transparent glass hover:bg-[#78716c] text-slate-800 text-sm font-bold px-3 py-2 rounded-sm mt-3">
                                         Wishlist
                                     </button>

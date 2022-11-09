@@ -19,7 +19,6 @@ export const HoverCategoryWanita = () => {
         fetchData()
     }, [])
 
-    console.log(data)
     return (
         <div className="bg-white h-auto w-full absolute z-10">
             <div className="mx-auto py-0 md:py-4 px-4 sm:px-6 lg:px-8 shadow ">

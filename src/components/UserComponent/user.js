@@ -41,10 +41,12 @@ const User = ({ children }) => {
     const logoutHandler = async () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
         await axios
-            .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/logout`)
+            .post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/logout/${user.id}`,
+            )
             .then(() => {
                 Cookies.remove('token')
-                Router.push('/login')
+                Router.push('/beranda')
             })
     }
     const akunFiturItems = [

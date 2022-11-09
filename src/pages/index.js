@@ -1,45 +1,76 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import AppLayout from '@/components/Layouts/AppLayout'
+import Head from 'next/head'
+import SwiperVertical from '@/components/swiperJs/swiperVertical'
+import SwiperHorizontal from '@/components/swiperJs/swiperHorizontal'
+import { References } from '@/components/SectionRefereces/References'
+import Cookies from 'js-cookie'
 
-const onProgress = () => {
-    const [data, setData] = useState()
-    const Get = async () => {
-        await axios
-            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/kategori`)
-            .then(response => setData(response.data.data))
-            .catch(error => {})
-    }
-    useEffect(() => {
-        Get()
-    }, [])
-
-    console.log(data)
+const Beranda = () => {
+    const token = Cookies.get('token')
 
     return (
-        <div className="relative flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
-            <div className="max-w-xl mx-auto sm:px-6 lg:px-8">
-                <div className="flex flex-col items-center pt-8 sm:justify-start sm:pt-0">
-                    <div className="px-4 text-lg text-gray-500 border-r border-gray-400 tracking-wider">
-                        On Progress
-                    </div>
+        <AppLayout header={''}>
+            <Head>
+                <title>GakUniq - Beranda</title>
+            </Head>
 
-                    <div className="ml-4 text-lg text-gray-500 uppercase tracking-wider">
-                        Comming soon...
+            <div className="flex flex-col shadow overflow-hidden">
+                <div className="">
+                    <SwiperVertical />
+                </div>
+                <span className="bg-slate-50 h-[12px]"></span>
+                <span className="bg-slate-100 h-[12px]"></span>
+                <span className="bg-slate-200 h-[12px]"></span>
+                <div className="flex flex-row items-center bg-slate-300 w-auto h-auto py-3 shadow-md">
+                    <div className="flex flex-col items-center justify-center border-2 rounded-md min-h-[40vh] m-4 p-4">
+                        <h1 className="text-2xl font-bold text-slate-500">
+                            ON <br /> FLASH <br /> SALE!
+                        </h1>
                     </div>
-                    {data?.map(item => (
-                        <div
-                            key={item.id}
-                            className="flex flex-col flex-nowrap my-2 md:my-0 mx-2 md:mx-5">
-                            <h1 className="text-xs md:text-lg font-bold mb-0 md:mb-2 ">
-                                {item.name}
+                    <div className="flex items-center">
+                        <SwiperHorizontal />
+                    </div>
+                </div>
+                <span className="bg-slate-200 h-[12px]"></span>
+                <span className="bg-slate-100 h-[12px]"></span>
+                <span className="bg-slate-50 h-[12px]"></span>
+                {/* {token ? (
+                    <div className="py-4 rounded-md bg-slate-50">
+                        <div className="flex flex-col flex-wrap justify-start items-start overflow-hidden">
+                            <h1 className="text-2xl font-bold text-slate-500 mx-5">
+                                Berdasarkan referensimu!
                             </h1>
-                            <span className="text-sm">Koleksi Atasan</span>
+                            <References />
                         </div>
-                    ))}
+                    </div>
+                ) : (
+                    ''
+                )} */}
+            </div>
+            <div className="flex flex-col bg-[#f4f4f4] w-full h-full items-start md:items-center shadow-lg z-10 border-2">
+                <div className="px-5 md:px-0 py-4">
+                    <h1 className="text-2xl text-slate-800 mx-2 mb-3">
+                        INFORMASI
+                    </h1>
+                    <div className="flex flex-col md:flex-row flex-wrap items-start my-1">
+                        <span className="text-sm font-bold mx-2">
+                            Kebijakan pengembalian
+                        </span>
+                        <span className="text-sm font-bold mx-2">
+                            Pencari Lokasi Toko
+                        </span>
+                        <span className="text-sm font-bold mx-2">
+                            Pembelian melalui Saluran Resmi
+                        </span>
+                        <span className="text-sm font-bold mx-2">
+                            Sustainability
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </AppLayout>
     )
 }
 
-export default onProgress
+export default Beranda

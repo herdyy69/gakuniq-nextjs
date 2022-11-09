@@ -3,11 +3,7 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { HoverCategoryPria, HoverCategoryWanita } from '../common/HoverCategory'
-import {
-    AiOutlineUser,
-    AiOutlineShoppingCart,
-    AiOutlineMenu,
-} from 'react-icons/ai'
+import { AiOutlineUser, AiOutlineShoppingCart } from 'react-icons/ai'
 import { GiSelfLove } from 'react-icons/gi'
 import Cookies from 'js-cookie'
 import axios from 'axios'
@@ -109,6 +105,7 @@ const Nav = () => {
                                         key={index}
                                         href={{
                                             pathname: item.link,
+                                            query: { id: item.id },
                                         }}
                                         active={router.pathname === item.link}>
                                         <span
@@ -133,11 +130,12 @@ const Nav = () => {
                         </div>
 
                         <div className="flex flex-col md:flex-row items-start">
-                            <div className="relative mx-2">
+                            {/* <div className="relative mx-2">
                                 <input
                                     type="search"
                                     className="bg-transparent mb-2 md:mb-0 rounded-md max-w-[300px] h-[40px] pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                                    placeholder="Cari Produk"
+                                    placeholder="im sorry this feature is not available yet"
+                                    disabled
                                 />
                                 <div className="absolute top-1/2 left-3 transform -translate-y-1/2">
                                     <svg
@@ -154,7 +152,7 @@ const Nav = () => {
                                         />
                                     </svg>
                                 </div>
-                            </div>
+                            </div> */}
                             <div>
                                 {listMenu.map((item, index) => (
                                     <NavLink

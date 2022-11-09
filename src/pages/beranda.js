@@ -35,7 +35,7 @@ const Beranda = () => {
                 <span className="bg-slate-200 h-[12px]"></span>
                 <span className="bg-slate-100 h-[12px]"></span>
                 <span className="bg-slate-50 h-[12px]"></span>
-                {token ? (
+                {/* {token ? (
                     <div className="py-4 rounded-md bg-slate-50">
                         <div className="flex flex-col flex-wrap justify-start items-start overflow-hidden">
                             <h1 className="text-2xl font-bold text-slate-500 mx-5">
@@ -46,7 +46,7 @@ const Beranda = () => {
                     </div>
                 ) : (
                     ''
-                )}
+                )} */}
             </div>
             <div className="flex flex-col bg-[#f4f4f4] w-full h-full items-start md:items-center shadow-lg z-10 border-2">
                 <div className="px-5 md:px-0 py-4">

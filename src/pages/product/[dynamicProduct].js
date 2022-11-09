@@ -65,16 +65,32 @@ const DetailProduct = () => {
                 console.log(error)
             })
         axios
-            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/review_produk`)
+            .get(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/review_produk/${params}`,
+            )
             .then(res => {
                 setUlasan(res.data.data)
             })
             .catch(err => {
                 console.log(err)
             })
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/all/user`)
+            .then(res => {
+                setUser(res.data.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }, [])
-
+    const [user, setUser] = useState()
     const [ulasan, setUlasan] = useState()
+
+    // filter ulasan sesuai id user
+    const filterUlasan = ulasan?.filter(
+        ulasan => ulasan.user_id === data?.user_id,
+    )
+
     console.log(ulasan)
 
     const warnas = [
@@ -121,7 +137,6 @@ const DetailProduct = () => {
     for (let i = 1; i <= stok; i++) {
         stokArray.push(i)
     }
-    console.log(qty)
     return (
         <AppLayout
             subTitle={
@@ -260,11 +275,11 @@ const DetailProduct = () => {
                                     </SwiperSlide>
                                 </Swiper>
                             </div>
-                            <span className="w-[full] h-[50px] bg-slate-300 rounded-md flex items-center justify-center btn btn-ghost">
+                            {/* <span className="w-[full] h-[50px] bg-slate-300 rounded-md flex items-center justify-center btn btn-ghost">
                                 <p className="text-sm font-bold">
                                     Cek Detail dan Ketersediaan Produk
                                 </p>
-                            </span>
+                            </span> */}
                         </div>
                         <div className="flex flex-col w-full mt-4 md:mt-0 md:ml-4">
                             <div className="flex flex-col w-full h-auto p-4 bg-slate-200 rounded-lg">
@@ -379,29 +394,6 @@ const DetailProduct = () => {
                                                 className="btn btn-square btn-ghost glass">
                                                 <AiOutlinePlus />
                                             </button>
-                                            {/* SELECT OPTION */}
-                                            {/* <select
-                                                className="select-css w-[16rem] rounded-md"
-                                                value={qty}
-                                                onChange={e =>
-                                                    setQty(e.target.value)
-                                                }>
-                                                {stokArray.length > 0 ? (
-                                                    stokArray.map(data => (
-                                                        <option
-                                                            key={data}
-                                                            value={data}>
-                                                            {data
-                                                                ? data
-                                                                : 'STOK KOSONG'}
-                                                        </option>
-                                                    ))
-                                                ) : (
-                                                    <option value="STOK KOSONG">
-                                                        STOK KOSONG
-                                                    </option>
-                                                )}
-                                            </select> */}
                                         </div>
                                     </div>
                                     <span className="flex flex-row items-center justify-start mt-4">
@@ -433,24 +425,39 @@ const DetailProduct = () => {
                                     Ulasan Pembeli
                                 </h1>
 
-                                {coment.map(data => (
-                                    <div
-                                        key={data.id}
-                                        className="bg-slate-100 flex flex-col flex-nowrap mt-2 border-y-2 rounded-lg border-slate-900 py-4 px-3 my-1">
-                                        <div className="flex flex-col">
-                                            <h1 className="text-2xl font-bold text-slate-800">
-                                                {data.name}
-                                            </h1>
-                                            <p className="text-sm text-slate-800">
-                                                {data.status}
-                                            </p>
-                                            {/* komen */}
-                                            <p className="text-sm text-slate-800">
-                                                {data.coment}
-                                            </p>
-                                        </div>
+                                {ulasan?.length === 0 ? (
+                                    <div className="bg-slate-100 flex flex-col flex-nowrap mt-2 border-y-2 rounded-lg border-slate-900 py-4 px-3 my-1">
+                                        <h1 className="text-xl font-bold text-slate-800">
+                                            Belum ada ulasan
+                                        </h1>
                                     </div>
-                                ))}
+                                ) : (
+                                    ulasan?.map(data => (
+                                        <div
+                                            key={data.id}
+                                            className="bg-slate-100 flex flex-col flex-nowrap mt-2 border-y-2 rounded-lg border-slate-900 py-4 px-3 my-1">
+                                            <div className="flex flex-col">
+                                                <h1 className="text-2xl font-bold text-slate-800">
+                                                    {user?.map(dataUser =>
+                                                        dataUser.id ===
+                                                        data.user_id
+                                                            ? dataUser.nama_depan +
+                                                              ' ' +
+                                                              dataUser.nama_belakang
+                                                            : '',
+                                                    )}
+                                                </h1>
+                                                <p className="text-sm text-slate-800">
+                                                    {data.status}
+                                                </p>
+                                                {/* komen */}
+                                                <p className="text-sm text-slate-800">
+                                                    {data.komen}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>

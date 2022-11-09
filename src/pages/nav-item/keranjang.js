@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { BsTrash } from 'react-icons/bs'
 import Cookies from 'js-cookie'
 import axios from 'axios'
+import Guest from '@/components/Layouts/Guest'
 
 const Keranjang = () => {
     const router = useRouter()
@@ -206,6 +207,20 @@ const Keranjang = () => {
                                     </span>
                                 </div>
                             ))}
+
+                            {data?.length === 0 && (
+                                <div className="flex flex-col items-center justify-center w-full h-full p-4 mt-2 bg-slate-200 rounded-lg hover:bg-slate-500">
+                                    <p className="text-lg font-bold text-slate-800">
+                                        Keranjang Kosong
+                                    </p>
+
+                                    <Link href="/katalog">
+                                        <a className="btn btn-primary mt-4">
+                                            Belanja Sekarang
+                                        </a>
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className="flex flex-col w-full mt-4 md:mt-0 md:ml-4">
@@ -280,7 +295,7 @@ const Keranjang = () => {
                     </div>
                 </div>
             ) : (
-                <h1>asa</h1>
+                <Guest />
             )}
 
             <Head>

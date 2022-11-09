@@ -10,12 +10,16 @@ const Profiles = () => {
     const [user, setUser] = useState({})
 
     const fetchData = async () => {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        await axios
-            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`)
-            .then(response => {
-                setUser(response.data.data[0])
-            })
+        if (token) {
+            await axios
+                .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user`)
+                .then(response => {
+                    setUser(response.data.data[0])
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
     }
     useEffect(() => {
         fetchData()
@@ -28,9 +32,9 @@ const Profiles = () => {
             <div className="flex flex-col md:flex-row items-center">
                 <div className="flex flex-col items-center bg-slate-200 px-3 py-4 rounded-lg max-w-[16rem] max-h-96 shadow-2xl">
                     <img src="/logo.png" className="max-w-50 h-auto" />
-                    <button className="max-w-[13rem] h-auto bg-slate-800 text-white font-bold py-2 px-5 rounded">
+                    {/* <button className="max-w-[13rem] h-auto bg-slate-800 text-white font-bold py-2 px-5 rounded">
                         Ganti Foto
-                    </button>
+                    </button> */}
                     <p className="max-w-[13rem] text-sm text-slate-800 py-2 mx-5">
                         Foto profil harus berupa gambar dengan format .jpg,
                         .jpeg, atau .png
@@ -98,9 +102,9 @@ const Profiles = () => {
                             <td className="">{user.alamat_lengkap}</td>
                         </tr>
                     </table>
-                    <button className="w-[13rem] bg-slate-800 text-white font-bold py-2 px-5 rounded mt-4">
+                    {/* <button className="w-[13rem] bg-slate-800 text-white font-bold py-2 px-5 rounded mt-4">
                         Ubah Informasi
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </User>
