@@ -17,9 +17,6 @@ const Keranjang = () => {
     const [keranjang, setKeranjang] = useState([])
     const [total, setTotal] = useState([])
 
-    const allValue = new FormData()
-    allValue.append('keranjang', keranjang)
-
     const fetchData = async () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
         await axios
