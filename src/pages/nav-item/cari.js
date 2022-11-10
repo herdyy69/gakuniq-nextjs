@@ -13,7 +13,7 @@ const Cari = () => {
                         <p className="text-xs py-4 px-4 font-extrabold">
                             <Link
                                 href={{
-                                    pathname: '/beranda',
+                                    pathname: '/',
                                 }}>
                                 <a className="underline">GAKUNIQ</a>
                             </Link>

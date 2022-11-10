@@ -125,7 +125,6 @@ const SwiperHorizontal = () => {
                     sensitivity: 1,
                 }}
                 className="mySwiper swiper2">
-                {/* filter data diskon saja */}
                 {data &&
                     data
                         .filter(data => data.diskon > 0)
@@ -135,7 +134,12 @@ const SwiperHorizontal = () => {
                                     <div className="inline-flex flex-col items-start justify-start p-3">
                                         <div className="">
                                             <img
-                                                src="/logo.png"
+                                                src={
+                                                    process.env
+                                                        .NEXT_PUBLIC_BACKEND_URL +
+                                                    '/' +
+                                                    data?.gambar_produk1
+                                                }
                                                 alt="logo"
                                                 className="w-[100px] "
                                             />

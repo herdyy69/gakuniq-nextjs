@@ -138,7 +138,7 @@ const History = () => {
                                                                     router.push(
                                                                         '/akun/history',
                                                                     )
-                                                                    router.reload()
+                                                                    // router.reload()
                                                                 })
                                                                 .catch(err => {
                                                                     console.log(
@@ -175,7 +175,7 @@ const History = () => {
                                                                                 router.push(
                                                                                     '/akun/history',
                                                                                 )
-                                                                                router.reload()
+                                                                                // router.reload()
                                                                             },
                                                                         )
                                                                         .catch(
@@ -306,7 +306,7 @@ const History = () => {
                                                                                                 router.push(
                                                                                                     '/akun/history',
                                                                                                 )
-                                                                                                router.reload()
+                                                                                                // router.reload()
                                                                                             },
                                                                                         )
                                                                                         .catch(

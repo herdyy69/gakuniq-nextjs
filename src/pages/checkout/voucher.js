@@ -68,7 +68,7 @@ const Checkout = props => {
                         <p className="text-xs py-4 px-4 font-extrabold">
                             <Link
                                 href={{
-                                    pathname: '/beranda',
+                                    pathname: '/',
                                 }}>
                                 <a className="underline">GAKUNIQ</a>
                             </Link>
@@ -184,7 +184,9 @@ const Checkout = props => {
                                 Checkout
                             </button>
                             <span className="mx-[1px]"></span>
-                            <button className="btn  btn-ghost bg-red-600 text-slate-800 font-bold py-2 px-4 rounded-md">
+                            <button
+                                onClick={() => router.push('/akun/voucher')}
+                                className="btn  btn-ghost bg-red-600 text-slate-800 font-bold py-2 px-4 rounded-md">
                                 Cancel
                             </button>
                         </span>

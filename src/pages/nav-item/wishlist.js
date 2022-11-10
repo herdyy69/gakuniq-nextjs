@@ -14,8 +14,7 @@ const Wishlist = () => {
 
     const [data, setData] = useState()
     const [dataProduk, setDataProduk] = useState()
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
+
     const [showAlert, setshowAlert] = useState(false)
 
     useEffect(() => {
@@ -23,21 +22,17 @@ const Wishlist = () => {
             .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/wishlist`)
             .then(res => {
                 setData(res.data.data)
-                setLoading(false)
             })
             .catch(err => {
-                setError(true)
-                setLoading(false)
+                setshowAlert('Proses Gagal')
             })
         axios
             .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/produk`)
             .then(res => {
                 setDataProduk(res.data.data)
-                setLoading(false)
             })
             .catch(err => {
-                setError(true)
-                setLoading(false)
+                setshowAlert('Proses Gagal')
             })
     }, [])
 
@@ -49,20 +44,22 @@ const Wishlist = () => {
                 setshowAlert('success delete wishlist')
             })
             .catch(err => {
-                console.log(err)
+                setshowAlert('Proses Gagal')
+            })
+    }
+    const deleteAllWishlist = async () => {
+        await axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/delete/wishlist`)
+            .then(res => {
+                console.log(res)
+                setshowAlert('success delete all wishlist')
+            })
+            .catch(err => {
+                setshowAlert('Proses Gagal')
             })
     }
 
     var onDiscount = false
-
-    const DummyData = [
-        {
-            id: 1,
-        },
-        {
-            id: 2,
-        },
-    ]
 
     return (
         <AppLayout
@@ -72,7 +69,7 @@ const Wishlist = () => {
                         <p className="text-xs py-4 px-4 font-extrabold">
                             <Link
                                 href={{
-                                    pathname: '/beranda',
+                                    pathname: '/',
                                 }}>
                                 <a className="underline">GAKUNIQ</a>
                             </Link>
@@ -94,23 +91,48 @@ const Wishlist = () => {
             }>
             {token ? (
                 <div className="mx-auto my-[2rem] max-w-[80vw]">
+                    {showAlert ? (
+                        <div className="bg-[#F2F2F2] rounded-md p-4 mb-4 flex items-center justify-between">
+                            <p className="text-sm text-[#4F4F4F]">
+                                {showAlert}
+                            </p>
+                            {/* close */}
+                            <div className="flex justify-end">
+                                <button
+                                    onClick={() => setshowAlert(false)}
+                                    className="text-[#828282] text-sm">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    ) : null}
                     <div className="flex flex-col md:flex-row">
                         <div className="flex flex-col">
                             <div className="inline-flex flex-row items-center justify-start min-w-[50vw] border-b-4 rounded-lg">
                                 <span className="text-sm font-bold text-slate-800">
-                                    <label className="inline-flex items-center">
-                                        <Link
-                                            href={{
-                                                pathname: '',
-                                            }}>
-                                            <a className="ml-2 text-red-700 opacity-[0.9]">
-                                                Hapus Semua
-                                            </a>
-                                        </Link>
+                                    <label className="inline-flex items-center mb-1">
+                                        <a
+                                            onClick={() => deleteAllWishlist()}
+                                            className="ml-2 text-red-700 opacity-[0.9]">
+                                            Hapus Semua
+                                        </a>
                                     </label>
                                 </span>
                             </div>
                             <div className="inline-flex flex-col items-center justify-center min-w-[80vw] min-h-[30vh]">
+                                {data?.length === 0 && (
+                                    <div className="flex flex-col items-center justify-center w-full h-full p-4 mt-2 bg-slate-200 rounded-lg hover:bg-slate-500">
+                                        <p className="text-lg font-bold text-slate-800">
+                                            Wishlist Kosong
+                                        </p>
+
+                                        <Link href="/katalog">
+                                            <a className="btn btn-primary mt-4">
+                                                Belanja Sekarang
+                                            </a>
+                                        </Link>
+                                    </div>
+                                )}
                                 {data?.map(item => (
                                     <div
                                         key={item.id}
@@ -118,8 +140,13 @@ const Wishlist = () => {
                                         <div className="flex flex-row">
                                             <div className="flex flex-row items-center justify-center mx-auto">
                                                 <img
-                                                    src="https://i.ibb.co/0nQqZ1t/Rectangle-1.png"
-                                                    alt="Rectangle-1"
+                                                    src={
+                                                        process.env
+                                                            .NEXT_PUBLIC_BACKEND_URL +
+                                                        '/' +
+                                                        item.produk.gambar_produk1
+                                                    }
+                                                    alt="Null Image"
                                                     border="0"
                                                     className="max-w-[90px] max-h-[90px] rounded-lg"
                                                 />
@@ -186,50 +213,6 @@ const Wishlist = () => {
                                 ))}
                             </div>
                         </div>
-                        {/* <div className="flex flex-col w-full mt-4 md:mt-0 md:ml-4">
-                        <div className="flex flex-col w-full h-auto p-4 bg-slate-200 rounded-lg">
-                            <div className="flex flex-col w-full h-full">
-                                <h1 className="text-2xl font-bold text-slate-800 mb-2">
-                                    Ringkasan Belanja
-                                </h1>
-                                <div className="flex flex-row items-center justify-between">
-                                    <p className="text-lg font-normal text-slate-800">
-                                        Total Harga
-                                    </p>
-                                    <p className="text-lg font-bold text-slate-800">
-                                        Rp 20.000
-                                    </p>
-                                </div>
-                                <div className="flex flex-row items-center justify-between">
-                                    <p className="text-lg font-normal text-slate-800">
-                                        Biaya Lainnya
-                                    </p>
-                                    <p className="text-lg font-bold text-slate-800">
-                                        Rp 0
-                                    </p>
-                                </div>
-                                <span className="flex flex-row items-center justify-between mt-2">
-                                    <hr className="w-full border-1 border-slate-400" />
-                                </span>
-                                <div className="flex flex-row items-center justify-between border-t-2 border-x-zinc-900">
-                                    <p className="text-lg font-normal text-slate-800">
-                                        Total Harga
-                                    </p>
-                                    <p className="text-lg font-bold text-slate-800">
-                                        Rp 20.000
-                                    </p>
-                                </div>
-                                <span className="flex flex-col items-center justify-between mt-2">
-                                    <button className="btn w-full py-2 text-lg font-bold text-white bg-slate-800 rounded-lg">
-                                        Lanjutkan Pembayaran
-                                    </button>
-                                    <button className="btn w-full py-2 text-lg font-bold text-slate-800 bg-slate-200 rounded-lg glass">
-                                        Lanjutkan Belanja
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </div> */}
                     </div>
                 </div>
             ) : (

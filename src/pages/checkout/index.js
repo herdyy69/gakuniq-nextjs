@@ -111,7 +111,7 @@ const Checkout = () => {
                         <p className="text-xs py-4 px-4 font-extrabold">
                             <Link
                                 href={{
-                                    pathname: '/beranda',
+                                    pathname: '/',
                                 }}>
                                 <a className="underline">GAKUNIQ</a>
                             </Link>
@@ -216,6 +216,7 @@ const Checkout = () => {
                                         onChange={e =>
                                             setVoucher(e.target.value)
                                         }>
+                                        <option value="0">Tidak ada</option>
                                         {/* filter berdasarkan harga terendah */}
                                         {voucherme
                                             ?.sort(
@@ -289,7 +290,15 @@ const Checkout = () => {
                                         Total
                                     </p>
                                     <p className="text-lg font-bold text-slate-800">
-                                        Rp. {total}
+                                        Rp.{' '}
+                                        {total
+                                            ? total
+                                                  .toString()
+                                                  .replace(
+                                                      /\B(?=(\d{3})+(?!\d))/g,
+                                                      '.',
+                                                  )
+                                            : ''}
                                     </p>
                                 </span>
                             </div>
@@ -315,7 +324,11 @@ const Checkout = () => {
                                     Checkout
                                 </button>
                                 <span className="my-[1px]"></span>
-                                <button className="btn  btn-ghost bg-red-600 text-slate-800 font-bold py-2 px-4 rounded-md">
+                                <button
+                                    onClick={() => {
+                                        router.push('/nav-item/keranjang')
+                                    }}
+                                    className="btn  btn-ghost bg-red-600 text-slate-800 font-bold py-2 px-4 rounded-md">
                                     Cancel
                                 </button>
                             </span>

@@ -16,6 +16,7 @@ const Keranjang = () => {
     const [data, setData] = useState()
     const [keranjang, setKeranjang] = useState([])
     const [total, setTotal] = useState([])
+    const [dataProduk, setDataProduk] = useState()
 
     const fetchData = async () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -27,6 +28,12 @@ const Keranjang = () => {
             .catch(error => {
                 console.log(error)
             })
+        axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/produk`)
+            .then(res => {
+                setDataProduk(res.data.data)
+            })
+            .catch(err => {})
     }
 
     const deleteKeranjang = async id => {
@@ -34,6 +41,17 @@ const Keranjang = () => {
             .delete(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/keranjang/${id}`,
             )
+            .then(res => {
+                console.log(res)
+                fetchData()
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+    const deleteAllKeranjang = async () => {
+        await axios
+            .get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/delete/keranjang`)
             .then(res => {
                 console.log(res)
                 fetchData()
@@ -55,7 +73,7 @@ const Keranjang = () => {
                     <p className="text-xs py-4 px-4 font-extrabold">
                         <Link
                             href={{
-                                pathname: '/beranda',
+                                pathname: '/',
                             }}>
                             <a className="underline">GAKUNIQ</a>
                         </Link>
@@ -77,33 +95,17 @@ const Keranjang = () => {
             {token ? (
                 <div className="mx-auto my-[2rem] max-w-[80rem] flex flex-col md:flex-row">
                     <div className="flex flex-col">
-                        {/* <div className="inline-flex flex-row items-center justify-between min-w-[50vw] border-b-4 rounded-lg">
-                                <span className="text-sm font-bold text-slate-800">
-                                    <label className="inline-flex items-center">
-                                        <input
-                                            onClick={() => setChecked(!checked)}
-                                            checked={checked}
-                                            type="checkbox"
-                                            className="checkbox checkbox-md"
-                                        />
-                                        <span className="ml-2 opacity-[0.7]">
-                                            Pilih Semua
-                                        </span>
-                                    </label>
-                                </span>
-                                <span className="text-sm font-bold text-slate-800">
-                                    <label className="inline-flex items-center">
-                                        <Link
-                                            href={{
-                                                pathname: '',
-                                            }}>
-                                            <a className="ml-2 text-red-700 opacity-[0.9]">
-                                                Hapus Semua
-                                            </a>
-                                        </Link>
-                                    </label>
-                                </span>
-                            </div> */}
+                        <div className="inline-flex flex-row items-center justify-between min-w-[50vw] border-b-4 rounded-lg">
+                            <span className="text-sm font-bold text-slate-800">
+                                <label className="inline-flex items-center mb-1">
+                                    <a
+                                        onClick={() => deleteAllKeranjang()}
+                                        className="ml-2 text-red-700 opacity-[0.9]">
+                                        Hapus Semua
+                                    </a>
+                                </label>
+                            </span>
+                        </div>
                         <div className="inline-flex flex-col items-center justify-center min-w-[50vw] min-h-[30vh]">
                             {data?.map(item => (
                                 <div
@@ -147,8 +149,13 @@ const Keranjang = () => {
                                         </span>
                                         <div className="flex flex-row justify-items-start justify-center mx-auto">
                                             <img
-                                                src="https://i.ibb.co/0nQqZ1t/Rectangle-1.png"
-                                                alt="Rectangle-1"
+                                                src={
+                                                    process.env
+                                                        .NEXT_PUBLIC_BACKEND_URL +
+                                                    '/' +
+                                                    item?.produk.gambar_produk1
+                                                }
+                                                alt="Null Image"
                                                 border="0"
                                                 className="max-w-[90px] max-h-[90px] rounded-lg"
                                             />

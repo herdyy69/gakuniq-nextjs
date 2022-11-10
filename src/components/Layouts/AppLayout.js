@@ -14,7 +14,7 @@ const AppLayout = ({ header, children, className, ...props }) => {
                 ) : (
                     ' '
                 )}
-                {router.pathname === '/beranda' ? (
+                {router.pathname === '/' ? (
                     ''
                 ) : (
                     <header className="bg-[#FFFFFF] shadow">
@@ -23,6 +23,7 @@ const AppLayout = ({ header, children, className, ...props }) => {
                         </div>
                     </header>
                 )}
+
                 <main>{children}</main>
 
                 {props.subTitle}

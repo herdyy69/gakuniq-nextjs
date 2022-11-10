@@ -61,8 +61,6 @@ const Katalog = () => {
             })
     }, [])
 
-    console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
-
     return (
         <AppLayout
             subTitle={
@@ -71,7 +69,7 @@ const Katalog = () => {
                         <p className="text-xs py-4 px-4 font-extrabold">
                             <Link
                                 href={{
-                                    pathname: '/beranda',
+                                    pathname: '/',
                                 }}>
                                 <a className="underline">GAKUNIQ</a>
                             </Link>
@@ -160,7 +158,13 @@ const Katalog = () => {
                                             {item.diskon} %
                                         </div>
                                         <span className="text-xs font-light line-through mx-2">
-                                            Rp {item.harga}
+                                            Rp
+                                            {item.harga
+                                                .toString()
+                                                .replace(
+                                                    /\B(?=(\d{3})+(?!\d))/g,
+                                                    '.',
+                                                )}
                                         </span>
                                     </div>
                                 )}

@@ -138,6 +138,8 @@ const Login = () => {
 
     console.log(confirmation)
 
+    const [buttonDisabled, setButtonDisabled] = useState(true)
+
     return (
         <div className="antialiased">
             <Head>
@@ -207,7 +209,18 @@ const Login = () => {
                                 required
                                 type="password"
                                 value={password}
-                                onChange={e => setPassword(e.target.value)}
+                                onChange={e => {
+                                    // jika password kurang dari 8 karakter maka tidak bisa di submit dan muncul error message
+                                    setPassword(e.target.value)
+                                    if (e.target.value.length < 8) {
+                                        setButtonDisabled(true)
+                                    }
+                                    if (e.target.value.length >= 8) {
+                                        setButtonDisabled(false)
+                                        setValidation('')
+                                        setPassword(e.target.value)
+                                    }
+                                }}
                                 placeholder=" Password"
                                 className="input input-bordered w-full max-w-xs bg-slate-100 bg-opacity-100 mt-2"
                             />
@@ -242,7 +255,11 @@ const Login = () => {
                                     </label>
                                 </div>
                             </div>
-                            <button className="btn btn-outline btn-info bg-[#2563eb] bg-opacity-80 text-black w-full max-w-xs mt-2 font-bold">
+                            <button
+                                disabled={buttonDisabled}
+                                className="btn btn-outline btn-info bg-[#2563eb]
+                                bg-opacity-80 text-black w-full max-w-xs mt-2
+                                font-bold">
                                 <span className="text-black opacity-60">
                                     Login
                                 </span>

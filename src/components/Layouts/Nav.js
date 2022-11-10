@@ -83,9 +83,9 @@ const Nav = () => {
                                 }}>
                                 <NavLink
                                     href={{
-                                        pathname: '/beranda',
+                                        pathname: '/',
                                     }}
-                                    active={router.pathname === '/beranda'}>
+                                    active={router.pathname === '/'}>
                                     <Image
                                         src="/logo.png"
                                         width={40}

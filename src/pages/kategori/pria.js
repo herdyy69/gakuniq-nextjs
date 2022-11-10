@@ -71,7 +71,7 @@ const Pria = () => {
                         <p className="text-xs py-4 px-4 font-extrabold">
                             <Link
                                 href={{
-                                    pathname: '/beranda',
+                                    pathname: '/kategori/pria',
                                 }}>
                                 <a className="underline">GAKUNIQ</a>
                             </Link>
@@ -177,7 +177,13 @@ const Pria = () => {
                                                 {item.diskon} %
                                             </div>
                                             <span className="text-xs font-light line-through mx-2">
-                                                Rp {item.harga}
+                                                Rp
+                                                {item.harga
+                                                    .toString()
+                                                    .replace(
+                                                        /\B(?=(\d{3})+(?!\d))/g,
+                                                        '.',
+                                                    )}
                                             </span>
                                         </div>
                                     )}

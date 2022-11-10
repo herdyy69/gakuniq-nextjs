@@ -80,7 +80,7 @@ const Profiles = () => {
                         </tr>
                         <tr className="my-2">
                             <td className="">Nomor Telepon</td>
-                            <td className="">{user.nomer_telepon}</td>
+                            <td className="">{user.no_telepon}</td>
                         </tr>
                         <tr className="my-2">
                             <td className="">

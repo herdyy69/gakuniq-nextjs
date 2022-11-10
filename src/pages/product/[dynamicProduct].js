@@ -145,7 +145,7 @@ const DetailProduct = () => {
                         <p className="text-xs py-4 px-4 font-extrabold">
                             <Link
                                 href={{
-                                    pathname: '/beranda',
+                                    pathname: '/',
                                 }}>
                                 <a className="underline">GAKUNIQ</a>
                             </Link>
@@ -207,7 +207,7 @@ const DetailProduct = () => {
                                         slot="container-start"
                                         className="parallax-bg"
                                         style={{
-                                            'background-image': `url(${
+                                            backgroundImage: `url(${
                                                 process.env
                                                     .NEXT_PUBLIC_BACKEND_URL +
                                                 '/' +
@@ -291,7 +291,15 @@ const DetailProduct = () => {
                                         </span>
                                         <br />
                                         <span className="text-2xl">
-                                            Rp {data?.harga}
+                                            Rp
+                                            {data?.harga &&
+                                                data?.harga !== 0 &&
+                                                data?.harga
+                                                    .toString()
+                                                    .replace(
+                                                        /\B(?=(\d{3})+(?!\d))/g,
+                                                        '.',
+                                                    )}
                                         </span>
                                     </h1>
                                     <span className="flex flex-row items-center justify-between mt-2">
@@ -410,7 +418,11 @@ const DetailProduct = () => {
                                             className="btn w-auto py-2 mx-1 text-lg font-bold text-white bg-slate-800 hover:bg-green-800 rounded-lg">
                                             TAMBAHKAN KE KERANJANG
                                         </button>
-                                        <button className="btn w-auto py-2 mx-1 text-lg font-bold text-slate-800 bg-slate-200 rounded-lg glass">
+                                        <button
+                                            onClick={() => {
+                                                router.push('/katalog')
+                                            }}
+                                            className="btn w-auto py-2 mx-1 text-lg font-bold text-slate-800 bg-slate-200 rounded-lg glass">
                                             Lanjutkan Belanja
                                         </button>
                                     </span>
